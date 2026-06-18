@@ -1,0 +1,100 @@
+{
+  "condition": "pipeline",
+  "scenario": 2,
+  "unit_id": "P1-S2",
+  "schema_valid": true,
+  "schema_errors": [],
+  "completeness": {
+    "trigger": "1/1",
+    "steps": "2/2",
+    "credentials": "2/2",
+    "resources": "1/1",
+    "score": 1.0
+  },
+  "exact_dimensions": {
+    "trigger_exact": true,
+    "steps_exact": false,
+    "credentials_exact": true,
+    "resources_exact": true
+  },
+  "n_param_divergences": 3,
+  "structure": {
+    "trigger_adapter": "email.trigger.gmail",
+    "step_adapters": [
+      "database.create_record.notion",
+      "email.send.gmail"
+    ],
+    "n_steps": 2
+  },
+  "divergences": {
+    "trigger": {
+      "adapter_gt": "email.trigger.gmail",
+      "adapter_candidate": "email.trigger.gmail",
+      "adapter_match": true,
+      "param_diffs": []
+    },
+    "steps": [
+      {
+        "adapter_gt": "database.create_record.notion",
+        "adapter_candidate": "database.create_record.notion",
+        "param_diffs": [
+          {
+            "param": "title",
+            "status": "differ",
+            "gt": "Mail",
+            "candidate": "{{email_object.subject}}"
+          }
+        ]
+      },
+      {
+        "adapter_gt": "email.send.gmail",
+        "adapter_candidate": "email.send.gmail",
+        "param_diffs": [
+          {
+            "param": "message",
+            "status": "differ",
+            "gt": "The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!",
+            "candidate": "The CEO of Acme Corp has reached out from {{email_object.from}}. I would like you to respond to them."
+          },
+          {
+            "param": "subject",
+            "status": "differ",
+            "gt": "Respond to Customer",
+            "candidate": "please respond to customer"
+          }
+        ]
+      }
+    ],
+    "credentials": {
+      "gt": [
+        "gmailOAuth2",
+        "notionApi"
+      ],
+      "candidate": [
+        "gmailOAuth2",
+        "notionApi"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    },
+    "resources": {
+      "gt_ids": [
+        "mock-notion-db-email-tracker"
+      ],
+      "candidate_ids": [
+        "mock-notion-db-email-tracker"
+      ],
+      "gt_names": [
+        "Email Tracker"
+      ],
+      "candidate_names": [
+        "Email Tracker"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    }
+  },
+  "source_file": "thesis-new-pipeline/scenarios/user-aspecs/P1-scenario-2_2026-06-08T10-29-48.json"
+}

@@ -1,0 +1,103 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Save new Gmail email bodies to Google Sheets",
+    "description": "I want Gmail to check for new emails every hour and automatically save the body of every new email that I receive to a Google spreadsheet called messages in a tab named Sheet1. The email body should be converted to plain text before being saved into the Messages column of the spreadsheet as a new row, and nothing else should be included. Only the plain text email body should be saved. Every new email should be saved.",
+    "created_at": "2026-06-07T18:33:54.842987Z",
+    "tags": []
+  },
+  "credentials": {
+    "gmailOAuth2": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    },
+    "googleSheetsOAuth2Api": {
+      "auth_type": "googleSheetsOAuth2Api",
+      "service": "google_sheets",
+      "credential_id": "mock-cred-google-sheets",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "google_sheets_spreadsheet": {
+      "service": "google_sheets",
+      "type": "spreadsheet",
+      "id": "mock-sheet-messages",
+      "name": "Messages",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0,
+            "rowCount": 1000,
+            "columnCount": 26,
+            "columns": [
+              "message"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "email.trigger.gmail",
+    "adapter_name": "Gmail Trigger",
+    "service": "gmail",
+    "is_trigger": true,
+    "configured_parameters": {
+      "filters": {},
+      "folder": "inbox",
+      "pollTimes": "everyHour"
+    },
+    "parameter_origin": {
+      "filters": "inferred",
+      "folder": "inferred",
+      "pollTimes": "user"
+    },
+    "credential_ref": "gmailOAuth2",
+    "trigger_mode": "polling",
+    "outputs": [
+      "email_object"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "spreadsheet.append.google_sheets",
+      "adapter_name": "Google Sheets Append",
+      "service": "google_sheets",
+      "is_trigger": false,
+      "configured_parameters": {
+        "documentId": "mock-sheet-messages",
+        "operation": "append",
+        "sheetName": "Sheet1",
+        "columns": {
+          "message": "{{email_object.body}}"
+        },
+        "convertFieldsToString": true
+      },
+      "parameter_origin": {
+        "documentId": "system",
+        "operation": "inferred",
+        "sheetName": "user",
+        "columns": "user",
+        "convertFieldsToString": "user"
+      },
+      "credential_ref": "googleSheetsOAuth2Api",
+      "outputs": [
+        "append_result"
+      ],
+      "input_from": "trigger_1"
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    }
+  ]
+}

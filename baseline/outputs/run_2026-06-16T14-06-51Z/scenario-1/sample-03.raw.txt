@@ -1,0 +1,95 @@
+{
+  "aspec_version": "1.0.0",
+  "metadata": {
+    "name": "Save Gmail Email Bodies to Google Sheets",
+    "description": "Automatically appends the body of every new Gmail email to the Messages spreadsheet in Sheet1."
+  },
+  "credentials": {
+    "gmail": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    },
+    "google_sheets": {
+      "auth_type": "googleSheetsOAuth2Api",
+      "service": "google_sheets",
+      "credential_id": "mock-cred-google-sheets",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "messages_spreadsheet": {
+      "service": "google_sheets",
+      "type": "spreadsheet",
+      "id": "mock-sheet-messages",
+      "name": "Messages",
+      "details": {
+        "sheetName": "Sheet1",
+        "columns": [
+          "message"
+        ]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "email.trigger.gmail",
+    "adapter_name": "Gmail Trigger",
+    "service": "gmail",
+    "description": "Triggers when a new email arrives in Gmail.",
+    "is_trigger": true,
+    "trigger_mode": "polling",
+    "credential_ref": "gmail",
+    "outputs": [
+      "email_object"
+    ],
+    "configured_parameters": {
+      "pollTimes": "everyMinute",
+      "folder": "inbox",
+      "filters": {}
+    },
+    "parameter_origin": {
+      "pollTimes": "default",
+      "folder": "default",
+      "filters": "default"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "append_message_row",
+      "adapter_id": "spreadsheet.append.google_sheets",
+      "adapter_name": "Google Sheets Append",
+      "service": "google_sheets",
+      "description": "Appends the email body as a new row in the message column of Sheet1.",
+      "input_from": "trigger_1.body",
+      "outputs": [
+        "append_result"
+      ],
+      "credential_ref": "google_sheets",
+      "configured_parameters": {
+        "operation": "append",
+        "documentId": "mock-sheet-messages",
+        "sheetName": "Sheet1",
+        "columns": {
+          "message": "{{$json.body}}"
+        },
+        "convertFieldsToString": false
+      },
+      "parameter_origin": {
+        "operation": "default",
+        "documentId": "user",
+        "sheetName": "user",
+        "columns": "inferred",
+        "convertFieldsToString": "default"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "append_message_row",
+      "type": "main"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+scenario_id,title,sample,timestamp,model,temperature,parse_ok,schema_valid,schema_error,trigger_adapter,n_steps,output_file,error
+1,Email to Spreadsheet,1,2026-06-16T14:06:51Z,gpt-5.4-mini,0.0,True,True,,email.trigger.gmail,1,scenario-1/sample-01.json,
+1,Email to Spreadsheet,2,2026-06-16T14:06:54Z,gpt-5.4-mini,0.0,True,True,,email.trigger.gmail,1,scenario-1/sample-02.json,
+1,Email to Spreadsheet,3,2026-06-16T14:06:57Z,gpt-5.4-mini,0.0,True,True,,email.trigger.gmail,1,scenario-1/sample-03.json,
+2,Customer Email -> Notion -> Colleague Alert,1,2026-06-16T14:07:00Z,gpt-5.4-mini,0.0,True,True,,email.trigger.gmail,2,scenario-2/sample-01.json,
+2,Customer Email -> Notion -> Colleague Alert,2,2026-06-16T14:07:05Z,gpt-5.4-mini,0.0,True,True,,email.trigger.gmail,2,scenario-2/sample-02.json,
+2,Customer Email -> Notion -> Colleague Alert,3,2026-06-16T14:07:08Z,gpt-5.4-mini,0.0,True,True,,email.trigger.gmail,2,scenario-2/sample-03.json,
+3,Expense Sheet -> Finance Email -> Label,1,2026-06-16T14:07:11Z,gpt-5.4-mini,0.0,True,True,,spreadsheet.trigger.google_sheets,2,scenario-3/sample-01.json,
+3,Expense Sheet -> Finance Email -> Label,2,2026-06-16T14:07:14Z,gpt-5.4-mini,0.0,True,True,,spreadsheet.trigger.google_sheets,2,scenario-3/sample-02.json,
+3,Expense Sheet -> Finance Email -> Label,3,2026-06-16T14:07:18Z,gpt-5.4-mini,0.0,True,True,,spreadsheet.trigger.google_sheets,2,scenario-3/sample-03.json,
+4,New Drive File -> Finance Email,1,2026-06-16T14:07:21Z,gpt-5.4-mini,0.0,True,True,,file_storage.trigger.google_drive,1,scenario-4/sample-01.json,
+4,New Drive File -> Finance Email,2,2026-06-16T14:07:24Z,gpt-5.4-mini,0.0,True,True,,file_storage.trigger.google_drive,1,scenario-4/sample-02.json,
+4,New Drive File -> Finance Email,3,2026-06-16T14:07:27Z,gpt-5.4-mini,0.0,True,True,,file_storage.trigger.google_drive,1,scenario-4/sample-03.json,

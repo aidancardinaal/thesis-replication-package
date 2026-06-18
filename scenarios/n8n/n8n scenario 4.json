@@ -1,0 +1,90 @@
+{
+  "name": "aspec scenario 4",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1u4tdx1NM3sCd-V8KfNtmnFxX2EuB1hA8",
+          "mode": "list",
+          "cachedResultName": "Guidelines",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1u4tdx1NM3sCd-V8KfNtmnFxX2EuB1hA8"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6363963f-38f4-4568-8fe5-97f96a6d039e",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qH2b8RQVvZJTU4ue",
+          "name": "Google Drive OAuth2 API jan@acmecorp.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "finance@acmecorp.com",
+        "subject": "Guideline added",
+        "emailType": "text",
+        "message": "=Dear finance department, \n\nSomething with the following name: {{ $json.name }} was added to the guideline folder. Please check whether this is correct. See the following link: {{ $json.webViewLink }}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "dd5f8e0e-dd1f-40af-87b6-46d242e10b03",
+      "name": "Send a message",
+      "webhookId": "6afebfc6-85a7-458f-9ec8-1f7d4595da76",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vgpQZXONygUdAgYt",
+          "name": "Gmail account jan@acmecorp.com"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "77576db4-d821-4d72-a706-b4e2f0555268",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aacd71ad1bb8197289596731de42e807bb5e0b47fbe1301d275db3df334a2dfe"
+  },
+  "id": "Ee9MQiVqwJJJOwMA",
+  "tags": []
+}

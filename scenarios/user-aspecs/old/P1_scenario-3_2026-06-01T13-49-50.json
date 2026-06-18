@@ -1,0 +1,130 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Hourly expense sheet email alert",
+    "description": "I have a Google Sheets expense sheet with three columns: Expense name, Expense amount, and Expense date. For every new row added, automatically send an email to expenses@acmecorp.com with the subject \"Expenses added\". The email message should say: \"An expense has been added to the expenses sheet. The name is {{row_object.row[\"Expense name\"]}} and the amount is {{row_object.row[\"Expense amount\"]}} and the date is {{row_object.row[\"Expense date\"]}}.\" Afterwards, label the same email in Gmail with a label called \"Expenses\", and the label ID is Label_expenses. Check the sheet every hour.",
+    "created_at": "2026-06-01T11:49:50.334644Z",
+    "tags": []
+  },
+  "credentials": {
+    "googleSheetsTriggerOAuth2Api": {
+      "auth_type": "googleSheetsTriggerOAuth2Api",
+      "service": "google_sheets",
+      "credential_id": "mock-cred-google-sheets-trigger",
+      "status": "ok"
+    },
+    "gmailOAuth2": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "google_sheets_spreadsheet": {
+      "service": "google_sheets",
+      "type": "spreadsheet",
+      "id": "mock-sheet-expenses",
+      "name": "Expenses",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0,
+            "rowCount": 1000,
+            "columnCount": 26
+          }
+        ],
+        "columns": [
+          "Expense name",
+          "Expense amount",
+          "Expense date"
+        ]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "spreadsheet.trigger.google_sheets",
+    "adapter_name": "Google Sheets Trigger",
+    "service": "google_sheets",
+    "is_trigger": true,
+    "configured_parameters": {
+      "documentId": "mock-sheet-expenses",
+      "pollTimes": "everyHour",
+      "sheetName": "Sheet1",
+      "event": "rowAdded"
+    },
+    "parameter_origin": {
+      "documentId": "system",
+      "pollTimes": "inferred",
+      "sheetName": "inferred",
+      "event": "inferred"
+    },
+    "credential_ref": "googleSheetsTriggerOAuth2Api",
+    "trigger_mode": "polling",
+    "outputs": [
+      "row_object"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "is_trigger": false,
+      "configured_parameters": {
+        "emailType": "text",
+        "sendTo": "expenses@acmecorp.com",
+        "subject": "Expenses added",
+        "message": "An expense has been added to the expenses sheet. The name is {{row_object.row[\"Expense name\"]}} and the amount is {{row_object.row[\"Expense amount\"]}} and the date is {{row_object.row[\"Expense date\"]}}."
+      },
+      "parameter_origin": {
+        "emailType": "inferred",
+        "sendTo": "user",
+        "subject": "user",
+        "message": "user"
+      },
+      "credential_ref": "gmailOAuth2",
+      "outputs": [
+        "send_result"
+      ],
+      "input_from": "trigger_1"
+    },
+    {
+      "step_id": "step_2",
+      "adapter_id": "email.label.gmail",
+      "adapter_name": "Add Label to Gmail Message",
+      "service": "gmail",
+      "is_trigger": false,
+      "configured_parameters": {
+        "messageId": "{{send_result.messageId}}",
+        "labelIds": [
+          "[\"Label_expenses\"]"
+        ]
+      },
+      "parameter_origin": {
+        "messageId": "user",
+        "labelIds": "user"
+      },
+      "credential_ref": "gmailOAuth2",
+      "outputs": [
+        "label_result"
+      ],
+      "input_from": "step_1"
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "type": "main"
+    }
+  ]
+}

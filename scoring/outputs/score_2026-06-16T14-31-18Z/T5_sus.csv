@@ -1,0 +1,6 @@
+participant,scenarios,sus_score,note
+P1,"S1,S2",82.5,item 5 left blank; imputed neutral (3)
+P2,"S3,S4",87.5,
+P3,"S1,S2",82.5,
+P4,"S3,S4",92.5,
+mean,,86.25,SD 4.15; range 82.5-92.5; all grade A (avg=68)

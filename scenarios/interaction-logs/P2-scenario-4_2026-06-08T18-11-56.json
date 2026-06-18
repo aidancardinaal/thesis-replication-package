@@ -1,0 +1,65 @@
+{
+  "scenario": "4",
+  "timestamp": "2026-06-08T18-11-56",
+  "initial_description": "i have a google drives called \"guidelines\". whenever file is added, sent email to: finance@acmecorp.com with subject\" guidline added\" and a message where it states tat a new file was added to the guidline folder and whether this is correct",
+  "interactions": [
+    {
+      "stage": "clarifying",
+      "question": "Should the email include the file name or just say that a new file was added to the Guidelines folder?",
+      "answer": "yes, include file name",
+      "updated_description": "I have a Google Drive folder called \"guidelines\". Whenever a file is added, send an email to finance@acmecorp.com with the subject \"guidline added\" and a message stating that a new file was added to the guidelines folder and including the file name."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email be sent for every new file added, or only for certain file types?",
+      "answer": "every new file",
+      "updated_description": "I have a Google Drive folder called \"guidelines\". Whenever every new file is added, send an email to finance@acmecorp.com with the subject \"guidline added\" and a message stating that a new file was added to the guidelines folder and including the file name."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email be sent for every new file added, or only when a file is added to the \"guidelines\" folder?",
+      "answer": "only when added to guidelines",
+      "updated_description": "I have a Google Drive folder called \"guidelines\". Whenever a new file is added to the \"guidelines\" folder, send an email to finance@acmecorp.com with the subject \"guidline added\" and a message stating that a new file was added to the guidelines folder and including the file name."
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "How often would you like me to check the \"guidelines\" folder for new files \u2014 every minute, or a different interval?",
+      "answer": "every hour",
+      "updated_description": "I have a Google Drive folder called \"guidelines\". Check the \"guidelines\" folder every hour for new files. Whenever a new file is added to the folder, send an email to finance@acmecorp.com with the subject \"guidline added\" and a message stating that a new file was added to the guidelines folder and including the file name.",
+      "parameter_set": {
+        "param_name": "pollTimes",
+        "value": "everyHour"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I send the email to finance@acmecorp.com, or would you like to change that address?",
+      "answer": "use finance@acmecorp.com",
+      "updated_description": "I have a Google Drive folder called \"guidelines\". Check the \"guidelines\" folder every hour for new files. Whenever a new file is added to the folder, send an email to finance@acmecorp.com with the subject \"guidline added\" and a message stating that a new file was added to the guidelines folder and including the file name.",
+      "parameter_set": {
+        "param_name": "sendTo",
+        "value": "finance@acmecorp.com"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the email subject be \"guidline added\", or would you like to change it?",
+      "answer": "yes this is a good subject\n",
+      "updated_description": "I have a Google Drive folder called \"guidelines\". Check the \"guidelines\" folder every hour for new files. Whenever a new file is added to the folder, send an email to finance@acmecorp.com with the subject \"guidline added\" and a message stating that a new file was added to the guidelines folder and including the file name.",
+      "parameter_set": {
+        "param_name": "subject",
+        "value": "guidline added"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the email message say: \u201cA new file was added to the guidelines folder. File name: [name]\u201d \u2014 or would you like to change it? (The bracketed parts \u2014 like [Expense name] \u2014 will be automatically replaced with the real values when the automation runs.)",
+      "answer": "\"Link to the file: [url to the file].\"",
+      "updated_description": "I have a Google Drive folder called \"guidelines\". Check the \"guidelines\" folder every hour for new files. Whenever a new file is added to the folder, send an email to finance@acmecorp.com with the subject \"guidline added\" and a message stating that a new file was added to the guidelines folder, including the file name and a link to the file.",
+      "parameter_set": {
+        "param_name": "message",
+        "value": "Link to the file: {{file_object.webViewLink}}."
+      }
+    }
+  ]
+}

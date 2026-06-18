@@ -1,0 +1,9 @@
+scenario,condition,n,schema_valid,completeness_mean,correctness_mean,correctness_sys_mean
+1,baseline,3,3/3,1.0,0.9333,0.9333
+1,pipeline,2,2/2,1.0,0.8667,1.0
+2,baseline,3,3/3,1.0,0.9444,0.9444
+2,pipeline,2,2/2,1.0,0.8889,0.9375
+3,baseline,3,3/3,1.0,0.9444,0.9444
+3,pipeline,2,2/2,1.0,0.9166,0.9394
+4,baseline,3,3/3,1.0,1.0,1.0
+4,pipeline,2,2/2,1.0,0.9333,0.9667

@@ -1,0 +1,113 @@
+{
+  "name": "Test n8n ai",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "id": "67d3be0d-c073-4ec3-b72a-b99e37e4b7d5",
+      "name": "When Email Received",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vgpQZXONygUdAgYt",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1nFGElBYgyGPd4lEwdvQO-JrepoSPXfSLwOqXcuJtn3s",
+          "mode": "list",
+          "cachedResultName": "Messages",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nFGElBYgyGPd4lEwdvQO-JrepoSPXfSLwOqXcuJtn3s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nFGElBYgyGPd4lEwdvQO-JrepoSPXfSLwOqXcuJtn3s/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message": "={{ $json.snippet }}"
+          },
+          "matchingColumns": [
+            "message"
+          ],
+          "schema": [
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c9346793-1bd4-492d-8243-77347988a2ab",
+      "name": "Add Email to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WI058TPBGX6ezSMB",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Email Received": {
+      "main": [
+        [
+          {
+            "node": "Add Email to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4b052d71-98da-4690-9674-ab9f158831e0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aacd71ad1bb8197289596731de42e807bb5e0b47fbe1301d275db3df334a2dfe"
+  },
+  "id": "kxc0WbwxgihWqoNV",
+  "tags": []
+}

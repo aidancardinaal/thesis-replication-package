@@ -1,0 +1,74 @@
+{
+  "scenario": "1",
+  "timestamp": "2026-06-08T10-05-22",
+  "initial_description": "i want my email content which i receive in Gmail to be saved in a google spreadsheet: Messages. Put it in tab: Sheet 1. The new content needs to be in a new row in the message column.",
+  "interactions": [
+    {
+      "stage": "clarifying",
+      "question": "Which Gmail emails should be saved \u2014 all incoming emails, or only emails that match certain conditions?",
+      "answer": "every incoming new email",
+      "updated_description": "I want every incoming new email I receive in Gmail to be saved in a Google spreadsheet called Messages, in the tab Sheet 1. Each new email\u2019s content should be added as a new row in the message column."
+    },
+    {
+      "stage": "clarifying",
+      "question": "What should be saved in the message column: the full email body, the subject line, or both?",
+      "answer": "both",
+      "updated_description": "I want every incoming new email I receive in Gmail to be saved in a Google spreadsheet called Messages, in the tab Sheet 1. Each new email\u2019s subject line and full email body should be added together as a new row in the message column."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should each new email be added as a separate row, or should multiple emails be combined into one row?",
+      "answer": "each new email as a separate row",
+      "updated_description": "I want every incoming new email I receive in Gmail to be saved in a Google spreadsheet called Messages, in the tab Sheet 1. Each new email should be added as a separate row in the message column, with the email\u2019s subject line and full email body added together in that row."
+    },
+    {
+      "stage": "configuring_resources",
+      "question": "Which spreadsheet for google_sheets? (options: ['Messages', 'Expenses'])",
+      "answer": "Messages"
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "How often would you like Gmail to check for new emails \u2014 every minute, or a different schedule?",
+      "answer": "every hour",
+      "updated_description": "I want Gmail to check for new emails every hour, and save each incoming new email I receive in Gmail to a Google spreadsheet called Messages, in the tab Sheet 1. Each new email should be added as a separate row in the message column, with the email\u2019s subject line and full email body added together in that row.",
+      "parameter_set": {
+        "param_name": "pollTimes",
+        "value": "everyHour"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Do you want to save every new email, or only emails that match certain conditions like from a specific person, with certain words in the subject, or with an attachment?",
+      "answer": "only emails that match the word dorpshuis in the subject",
+      "updated_description": "I want Gmail to check for new emails every hour, and save each incoming new email I receive in Gmail to a Google spreadsheet called Messages, in the tab Sheet 1, but only if the email has the word dorpshuis in the subject. Each matching new email should be added as a separate row in the message column, with the email\u2019s subject line and full email body added together in that row.",
+      "parameter_set": {
+        "param_name": "filters",
+        "value": {
+          "subject": "dorpshuis"
+        }
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I use \u201cSheet1\u201d as the tab name, or did you mean \u201cSheet 1\u201d?",
+      "answer": "Sheet 1",
+      "updated_description": "I want Gmail to check for new emails every hour, and save each incoming new email I receive in Gmail to a Google spreadsheet called Messages, in the tab Sheet 1, but only if the email has the word dorpshuis in the subject. Each matching new email should be added as a separate row in the message column, with the email\u2019s subject line and full email body added together in that row.",
+      "parameter_set": {
+        "param_name": "sheetName",
+        "value": "Sheet 1"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Which column in your Sheet 1 should each matching email be added to?",
+      "answer": "yes",
+      "updated_description": "I want Gmail to check for new emails every hour, and save each incoming new email I receive in Gmail to a Google spreadsheet called Messages, in the tab Sheet 1, but only if the email has the word dorpshuis in the subject. Each matching new email should be added as a separate row in the message column, with the email\u2019s subject line and full email body added together in that row.",
+      "parameter_set": {
+        "param_name": "columns",
+        "value": {
+          "message": "{{email_object.subject}}\n\n{{email_object.body}}"
+        }
+      }
+    }
+  ]
+}

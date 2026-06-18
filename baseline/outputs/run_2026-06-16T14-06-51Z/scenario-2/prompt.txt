@@ -1,0 +1,1353 @@
+=== SYSTEM ===
+You are a workflow-automation specification generator. Given a description of a desired automation, you output a single ASPEC JSON object that conforms to the provided ASPEC JSON Schema and that uses only the triggers, actions, and adapters defined in the provided action catalogue. For credential and resource fields, use the entries in the provided user vault (the credentials and resources the user has connected), referencing their identifiers rather than inventing them. Respond with the JSON object only, with no surrounding text, explanation, or code fences.
+
+=== HUMAN ===
+You receive emails in your Gmail from an important customer at ceo@acmecorp.com. Whenever one arrives, you want two things to happen:
+1. Save that email to your Notion database called Email Tracker — by storing the sender's email address and the email body. The database item can be named "Mail".
+2. Then send an email to your colleague at erik@fiber.nl with the subject "Please respond to Customer" and a message saying: "The CEO of Acme Corp has reached out from their email address. I would like you to respond to them." (the message should include the sender's email address).
+
+=== ASPEC JSON SCHEMA ===
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ajora.dev/aspec.schema.json",
+  "title": "Ajora ASPEC - Automation Specification",
+  "description": "Platform-neutral automation specification built on top of the Ajora action catalogue.",
+  "version": "1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "aspec_version",
+    "metadata",
+    "trigger",
+    "steps"
+  ],
+  "properties": {
+    "aspec_version": {
+      "type": "string",
+      "description": "Semantic version of the ASPEC spec used for this automation.",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "credentials": {
+      "type": "object",
+      "description": "Authentication credentials configured for this automation.",
+      "additionalProperties": {
+        "$ref": "#/$defs/credential"
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "External resources selected by the user (accounts, spreadsheets, folders, etc.).",
+      "additionalProperties": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "trigger": {
+      "description": "The single trigger step that starts the automation.",
+      "$ref": "#/$defs/step"
+    },
+    "steps": {
+      "type": "array",
+      "description": "Ordered list of non-trigger steps in the automation.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "connections": {
+      "type": "array",
+      "description": "Logical connections between steps (data/control flow).",
+      "items": {
+        "$ref": "#/$defs/connection"
+      }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "description": "High-level metadata about this automation specification.",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the automation.",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description of what this automation does."
+        },
+        "created_by": {
+          "type": "string",
+          "description": "Identifier of the creator (user id, email, etc.)."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp in ISO 8601 format."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp in ISO 8601 format."
+        },
+        "tags": {
+          "type": "array",
+          "description": "Optional tags for grouping or searching automations.",
+          "items": {
+            "type": "string",
+            "maxLength": 50
+          }
+        }
+      }
+    },
+    "credential": {
+      "type": "object",
+      "description": "Authentication credential for a service.",
+      "additionalProperties": false,
+      "required": [
+        "auth_type",
+        "service",
+        "status"
+      ],
+      "properties": {
+        "auth_type": {
+          "type": "string",
+          "description": "Type of authentication (e.g., oauth2_gmail, oauth2_google_sheets)."
+        },
+        "service": {
+          "type": "string",
+          "description": "Service identifier (e.g., gmail, google_sheets)."
+        },
+        "credential_id": {
+          "type": "string",
+          "description": "Reference to the credential in the user's vault."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the credential (ok, missing, invalid).",
+          "enum": [
+            "ok",
+            "missing",
+            "invalid"
+          ]
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "description": "A selected external resource (e.g., Gmail account, specific spreadsheet, folder).",
+      "additionalProperties": true,
+      "required": [
+        "service"
+      ],
+      "properties": {
+        "service": {
+          "type": "string",
+          "description": "Service identifier (e.g., gmail, google_sheets, outlook)."
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type within the service (e.g., account, spreadsheet, folder)."
+        },
+        "id": {
+          "type": "string",
+          "description": "Service-specific ID of this resource (e.g., spreadsheetId)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the resource."
+        },
+        "details": {
+          "type": "object",
+          "description": "Any additional service-specific metadata.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "description": "A single step in the automation, referring to a toolbox adapter. Assumed to be fully configured.",
+      "additionalProperties": false,
+      "required": [
+        "step_id",
+        "adapter_id",
+        "configured_parameters"
+      ],
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "description": "Unique identifier of this step within the automation.",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 100
+        },
+        "adapter_id": {
+          "type": "string",
+          "description": "ID of the adapter from the toolbox (e.g., email.trigger.gmail).",
+          "maxLength": 200
+        },
+        "adapter_name": {
+          "type": "string",
+          "description": "Optional human-readable name of the adapter (redundant with toolbox)."
+        },
+        "service": {
+          "type": "string",
+          "description": "Service used by this adapter (e.g., gmail, google_sheets)."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of the role of this step in this specific automation."
+        },
+        "is_trigger": {
+          "type": "boolean",
+          "description": "Indicates whether this step is the automation's trigger.",
+          "default": false
+        },
+        "trigger_mode": {
+          "type": "string",
+          "description": "Optional trigger mode when is_trigger = true (e.g., polling, webhook, event).",
+          "enum": [
+            "polling",
+            "webhook",
+            "event"
+          ],
+          "nullable": true
+        },
+        "input_from": {
+          "description": "Reference to the step (and optional alias) providing the input for this step.",
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Single reference, e.g. 'trigger_1.email'."
+            },
+            {
+              "type": "array",
+              "description": "Multiple input references for future use.",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "outputs": {
+          "type": "array",
+          "description": "Logical output types this step produces (e.g., email_object, append_result).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "credential_ref": {
+          "type": "string",
+          "description": "Reference to the credential key in the credentials object that this step should use."
+        },
+        "configured_parameters": {
+          "$ref": "#/$defs/configuredParameters"
+        },
+        "parameter_origin": {
+          "type": "object",
+          "description": "Indicates where each parameter value came from (user, default, inferred, system).",
+          "additionalProperties": {
+            "$ref": "#/$defs/parameterOrigin"
+          }
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Optional free-form annotations or hints for UI, debugging, etc.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "configuredParameters": {
+      "type": "object",
+      "description": "Parameter values configured for a specific step.",
+      "additionalProperties": {
+        "description": "Any JSON-serializable value, including null.",
+        "type": [
+          "string",
+          "number",
+          "boolean",
+          "object",
+          "array",
+          "null"
+        ]
+      }
+    },
+    "parameterOrigin": {
+      "type": "string",
+      "description": "Origin of a parameter value.",
+      "enum": [
+        "user",
+        "default",
+        "inferred",
+        "system"
+      ]
+    },
+    "connection": {
+      "type": "object",
+      "description": "Represents a logical connection between two steps.",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Source step_id."
+        },
+        "to": {
+          "type": "string",
+          "description": "Target step_id."
+        },
+        "type": {
+          "type": "string",
+          "description": "Optional connection type (e.g. main, error, branch).",
+          "default": "main"
+        }
+      }
+    }
+  }
+}
+
+=== ACTION CATALOGUE ===
+{
+  "toolbox_version": "0.2",
+  "metadata": {
+    "maintainer": "Ajora Core",
+    "last_updated": "09-05-2026",
+    "description": "Hierarchical toolbox registry for Ajora builder agent. Includes domains, actions, and adapters for core integrations."
+  },
+  "output_schemas": {
+    "email_object": {
+      "type": "object",
+      "description": "Represents an email message",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique message ID"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Email subject line"
+        },
+        "body": {
+          "type": "string",
+          "description": "Plain text body content"
+        },
+        "from": {
+          "type": "string",
+          "description": "Sender email address"
+        },
+        "to": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of recipient email addresses"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the email was sent"
+        },
+        "snippet": {
+          "type": "string",
+          "description": "Short preview of the email body"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "filename": {
+                "type": "string",
+                "description": "Name of the attached file"
+              },
+              "mimeType": {
+                "type": "string",
+                "description": "MIME type of the attachment"
+              },
+              "size": {
+                "type": "integer",
+                "description": "Size in bytes"
+              }
+            }
+          },
+          "description": "List of email attachments"
+        }
+      }
+    },
+    "data_object": {
+      "type": "object",
+      "description": "Generic key-value data object",
+      "additionalProperties": true
+    },
+    "append_result": {
+      "type": "object",
+      "description": "Result of appending data to a spreadsheet",
+      "properties": {
+        "updatedRange": {
+          "type": "string",
+          "description": "The range that was updated (e.g., 'Sheet1!A1:B2')"
+        },
+        "updatedRows": {
+          "type": "integer",
+          "description": "Number of rows that were updated"
+        }
+      }
+    },
+    "row_object": {
+      "type": "object",
+      "description": "Represents a spreadsheet row that triggered the automation",
+      "properties": {
+        "row": {
+          "type": "object",
+          "description": "Key-value pairs of column name to cell value",
+          "additionalProperties": true
+        },
+        "sheetName": {
+          "type": "string",
+          "description": "Name of the sheet tab the row belongs to"
+        },
+        "rowIndex": {
+          "type": "integer",
+          "description": "1-based row index within the sheet"
+        }
+      }
+    },
+    "send_result": {
+      "type": "object",
+      "description": "Result of sending an email message",
+      "properties": {
+        "messageId": {
+          "type": "string",
+          "description": "Unique ID of the sent message"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the message was sent"
+        }
+      }
+    },
+    "label_result": {
+      "type": "object",
+      "description": "Result of applying labels to an email message",
+      "properties": {
+        "messageId": {
+          "type": "string",
+          "description": "ID of the message that was labelled"
+        },
+        "appliedLabels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Label IDs that were applied"
+        }
+      }
+    },
+    "record_object": {
+      "type": "object",
+      "description": "Represents a record or page created in a structured database",
+      "properties": {
+        "recordId": {
+          "type": "string",
+          "description": "Unique ID of the created record"
+        },
+        "url": {
+          "type": "string",
+          "description": "Public URL to the record"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the record"
+        },
+        "properties": {
+          "type": "object",
+          "description": "Key-value map of the record's database properties",
+          "additionalProperties": true
+        }
+      }
+    },
+    "file_object": {
+      "type": "object",
+      "description": "Represents a file that triggered the automation",
+      "properties": {
+        "fileId": {
+          "type": "string",
+          "description": "Unique ID of the file"
+        },
+        "name": {
+          "type": "string",
+          "description": "File name including extension"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "MIME type of the file"
+        },
+        "createdTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the file was created"
+        },
+        "webViewLink": {
+          "type": "string",
+          "description": "URL to open the file in a browser"
+        }
+      }
+    }
+  },
+  "domains": [
+    {
+      "id": "email",
+      "name": "Email",
+      "type": "domain",
+      "internal_only": false,
+      "description": "Interact with email accounts to send, receive, or monitor messages.",
+      "has_children": "true",
+      "children": [
+        "email.trigger",
+        "email.send",
+        "email.label"
+      ],
+      "examples": [
+        "When a new email arrives in my inbox",
+        "Send an email to a contact",
+        "Search my emails for invoices"
+      ],
+      "intent_keywords": [
+        "email",
+        "inbox",
+        "mail",
+        "message"
+      ]
+    },
+    {
+      "id": "spreadsheet",
+      "name": "Spreadsheet",
+      "type": "domain",
+      "internal_only": false,
+      "description": "Work with tabular data stored in online spreadsheets like Google Sheets or Excel.",
+      "has_children": "true",
+      "children": [
+        "spreadsheet.trigger",
+        "spreadsheet.append"
+      ],
+      "examples": [
+        "Add a row to my Google Sheet",
+        "Update a value in Excel",
+        "Log new data into a sheet",
+        "When a new row is added to my spreadsheet"
+      ],
+      "intent_keywords": [
+        "sheet",
+        "excel",
+        "spreadsheet",
+        "table",
+        "row"
+      ]
+    },
+    {
+      "id": "database",
+      "name": "Database",
+      "type": "domain",
+      "internal_only": false,
+      "description": "Create and manage structured records in database and knowledge base tools (e.g. Notion, Airtable).",
+      "has_children": "true",
+      "children": [
+        "database.create_record"
+      ],
+      "examples": [
+        "Add a new page to my Notion database",
+        "Create a record in Airtable",
+        "Log an entry to my Notion wiki"
+      ],
+      "intent_keywords": [
+        "notion",
+        "database",
+        "page",
+        "record",
+        "wiki",
+        "airtable"
+      ]
+    },
+    {
+      "id": "file_storage",
+      "name": "File Storage",
+      "type": "domain",
+      "internal_only": false,
+      "description": "Monitor and manage files and folders in cloud file storage services (e.g. Google Drive, Dropbox).",
+      "has_children": "true",
+      "children": [
+        "file_storage.trigger"
+      ],
+      "examples": [
+        "When a new file is uploaded to my Google Drive folder",
+        "Monitor a folder for new documents",
+        "Trigger when a file is added to Dropbox"
+      ],
+      "intent_keywords": [
+        "drive",
+        "folder",
+        "file",
+        "google drive",
+        "storage",
+        "dropbox",
+        "upload"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "email.trigger",
+      "name": "Email Trigger",
+      "type": "action",
+      "internal_only": false,
+      "parent": "email",
+      "is_trigger": "true",
+      "description": "Trigger an automation when a new email is received or matches specific filters.",
+      "has_children": "true",
+      "children": [
+        "email.trigger.gmail"
+      ],
+      "outputs": [
+        "email"
+      ],
+      "common_parameters": [
+        "interval",
+        "folder",
+        "filters"
+      ],
+      "examples": [
+        "When I get a new email",
+        "Check my inbox every 15 minutes",
+        "Monitor my Gmail for new messages"
+      ],
+      "intent_keywords": [
+        "when email",
+        "new email",
+        "inbox monitor",
+        "incoming mail"
+      ]
+    },
+    {
+      "id": "email.send",
+      "name": "Send Email",
+      "type": "action",
+      "internal_only": false,
+      "parent": "email",
+      "is_trigger": "false",
+      "description": "Send an email message to one or more recipients.",
+      "has_children": "true",
+      "children": [
+        "email.send.gmail"
+      ],
+      "outputs": [
+        "send_result"
+      ],
+      "common_parameters": [
+        "sendTo",
+        "subject",
+        "message"
+      ],
+      "examples": [
+        "Send an email to my manager",
+        "Notify someone by email",
+        "Send a confirmation email"
+      ],
+      "intent_keywords": [
+        "send email",
+        "send message",
+        "notify by email",
+        "email to"
+      ]
+    },
+    {
+      "id": "email.label",
+      "name": "Label Email",
+      "type": "action",
+      "internal_only": false,
+      "parent": "email",
+      "is_trigger": "false",
+      "description": "Apply a label or tag to an existing email message.",
+      "has_children": "true",
+      "children": [
+        "email.label.gmail"
+      ],
+      "outputs": [
+        "label_result"
+      ],
+      "common_parameters": [
+        "messageId",
+        "labelIds"
+      ],
+      "examples": [
+        "Label an email as processed",
+        "Tag the email with a category",
+        "Mark the message with a Gmail label"
+      ],
+      "intent_keywords": [
+        "label email",
+        "tag email",
+        "mark message",
+        "categorise email"
+      ]
+    },
+    {
+      "id": "spreadsheet.trigger",
+      "name": "Spreadsheet Trigger",
+      "type": "action",
+      "internal_only": false,
+      "parent": "spreadsheet",
+      "is_trigger": "true",
+      "description": "Trigger an automation when a new row is added or updated in a spreadsheet.",
+      "has_children": "true",
+      "children": [
+        "spreadsheet.trigger.google_sheets"
+      ],
+      "outputs": [
+        "row_object"
+      ],
+      "common_parameters": [
+        "documentId",
+        "sheetName",
+        "event",
+        "interval"
+      ],
+      "examples": [
+        "When a new row is added to my sheet",
+        "Monitor Google Sheets for new entries",
+        "Trigger when the spreadsheet is updated"
+      ],
+      "intent_keywords": [
+        "when row added",
+        "new spreadsheet entry",
+        "sheet trigger",
+        "spreadsheet monitor"
+      ]
+    },
+    {
+      "id": "spreadsheet.append",
+      "name": "Spreadsheet Append",
+      "type": "action",
+      "internal_only": false,
+      "parent": "spreadsheet",
+      "is_trigger": "false",
+      "description": "Append a new row or record to an existing spreadsheet.",
+      "has_children": "true",
+      "children": [
+        "spreadsheet.append.google_sheets"
+      ],
+      "outputs": [
+        "append_result"
+      ],
+      "common_parameters": [
+        "sheet_name",
+        "columns",
+        "mapping"
+      ],
+      "examples": [
+        "Add a new row to my sheet",
+        "Append data to Google Sheets",
+        "Save an email summary into a spreadsheet"
+      ],
+      "intent_keywords": [
+        "add row",
+        "append",
+        "save to sheet",
+        "log to spreadsheet"
+      ]
+    },
+    {
+      "id": "database.create_record",
+      "name": "Create Record",
+      "type": "action",
+      "internal_only": false,
+      "parent": "database",
+      "is_trigger": "false",
+      "description": "Create a new record or page in a structured database.",
+      "has_children": "true",
+      "children": [
+        "database.create_record.notion"
+      ],
+      "outputs": [
+        "record_object"
+      ],
+      "common_parameters": [
+        "databaseId",
+        "title",
+        "properties"
+      ],
+      "examples": [
+        "Add a new entry to my Notion database",
+        "Create a record in Airtable",
+        "Log an item to my Notion table"
+      ],
+      "intent_keywords": [
+        "create record",
+        "add to notion",
+        "new database entry",
+        "create page"
+      ]
+    },
+    {
+      "id": "file_storage.trigger",
+      "name": "File Storage Trigger",
+      "type": "action",
+      "internal_only": false,
+      "parent": "file_storage",
+      "is_trigger": "true",
+      "description": "Trigger an automation when a file is created or modified in a cloud storage folder.",
+      "has_children": "true",
+      "children": [
+        "file_storage.trigger.google_drive"
+      ],
+      "outputs": [
+        "file_object"
+      ],
+      "common_parameters": [
+        "folderToWatch",
+        "event",
+        "interval"
+      ],
+      "examples": [
+        "When a new file is added to my Google Drive folder",
+        "Monitor a folder for new uploads",
+        "Trigger when a document appears in Drive"
+      ],
+      "intent_keywords": [
+        "when file added",
+        "new file",
+        "folder trigger",
+        "drive monitor",
+        "file upload"
+      ]
+    }
+  ],
+  "adapters": [
+    {
+      "id": "email.trigger.gmail",
+      "name": "Gmail Trigger",
+      "type": "adapter",
+      "internal_only": false,
+      "parent": "email.trigger",
+      "description": "Monitors a Gmail inbox for new messages using OAuth2 authentication. Polls the inbox at specified intervals and triggers the automation when new emails arrive or match filter criteria. Supports monitoring specific folders and applying search filters.",
+      "is_trigger": "true",
+      "trigger_mode": "polling",
+      "service": "gmail",
+      "n8n_node": "n8n-nodes-base.gmailTrigger",
+      "auth_type": "gmailOAuth2",
+      "has_children": "false",
+      "outputs": [
+        "email_object"
+      ],
+      "parameters": {
+        "pollTimes": {
+          "type": "enum",
+          "options": [
+            "everyMinute",
+            "every5Minutes",
+            "everyHour",
+            "custom"
+          ],
+          "default": "everyMinute",
+          "description": "Defines how often the inbox is checked for new messages."
+        },
+        "filters": {
+          "type": "object",
+          "properties": [
+            "from",
+            "to",
+            "subject",
+            "hasAttachment"
+          ],
+          "description": "Optional search filters to narrow which emails trigger the automation."
+        },
+        "folder": {
+          "type": "string",
+          "default": "inbox",
+          "description": "The Gmail folder to monitor."
+        }
+      },
+      "default_config": {
+        "pollTimes": "everyMinute",
+        "filters": {},
+        "folder": "inbox"
+      },
+      "examples": [
+        "When a new Gmail email arrives",
+        "Monitor my Gmail inbox",
+        "Trigger flow when Gmail gets a message with attachment"
+      ],
+      "intent_keywords": [
+        "gmail",
+        "inbox",
+        "receive email"
+      ]
+    },
+    {
+      "id": "email.send.gmail",
+      "name": "Send Email via Gmail",
+      "type": "adapter",
+      "internal_only": false,
+      "parent": "email.send",
+      "description": "Sends an email message via a Gmail account using OAuth2 authentication. Supports plain text and HTML email bodies, including template expressions that reference data from prior steps.",
+      "is_trigger": "false",
+      "trigger_mode": null,
+      "service": "gmail",
+      "n8n_node": "n8n-nodes-base.gmail",
+      "n8n_operation": "sendMessage",
+      "auth_type": "gmailOAuth2",
+      "has_children": "false",
+      "outputs": [
+        "send_result"
+      ],
+      "parameters": {
+        "sendTo": {
+          "type": "string",
+          "description": "Recipient email address(es). Separate multiple addresses with commas."
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject line of the email."
+        },
+        "emailType": {
+          "type": "enum",
+          "options": [
+            "text",
+            "html"
+          ],
+          "default": "text",
+          "description": "Format of the email body."
+        },
+        "message": {
+          "type": "string",
+          "description": "Body of the email. Supports template expressions referencing prior step output (e.g. {{$json.from}})."
+        }
+      },
+      "default_config": {
+        "emailType": "text"
+      },
+      "examples": [
+        "Send an email via Gmail",
+        "Notify someone by Gmail",
+        "Send a confirmation email from my Gmail account"
+      ],
+      "intent_keywords": [
+        "send gmail",
+        "gmail send",
+        "send email via gmail"
+      ]
+    },
+    {
+      "id": "email.label.gmail",
+      "name": "Add Label to Gmail Message",
+      "type": "adapter",
+      "internal_only": false,
+      "parent": "email.label",
+      "description": "Applies one or more labels to an existing Gmail message using OAuth2 authentication. The message ID must be available from a prior step (e.g. a Gmail trigger or search).",
+      "is_trigger": "false",
+      "trigger_mode": null,
+      "service": "gmail",
+      "n8n_node": "n8n-nodes-base.gmail",
+      "n8n_operation": "addLabels",
+      "auth_type": "gmailOAuth2",
+      "has_children": "false",
+      "outputs": [
+        "label_result"
+      ],
+      "parameters": {
+        "messageId": {
+          "type": "string",
+          "description": "ID of the Gmail message to label. Typically referenced from a prior trigger or search step."
+        },
+        "labelIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "One or more Gmail label IDs to apply to the message."
+        }
+      },
+      "default_config": {},
+      "examples": [
+        "Label the email as processed",
+        "Tag the Gmail message",
+        "Mark the email with a category label"
+      ],
+      "intent_keywords": [
+        "label gmail",
+        "tag email",
+        "mark gmail message"
+      ]
+    },
+    {
+      "id": "spreadsheet.trigger.google_sheets",
+      "name": "Google Sheets Trigger",
+      "type": "adapter",
+      "internal_only": false,
+      "parent": "spreadsheet.trigger",
+      "description": "Monitors a Google Sheets spreadsheet for new or updated rows using OAuth2 authentication. Polls at specified intervals and triggers the automation when the selected event occurs.",
+      "is_trigger": "true",
+      "trigger_mode": "polling",
+      "service": "google_sheets",
+      "n8n_node": "n8n-nodes-base.googleSheetsTrigger",
+      "auth_type": "googleSheetsTriggerOAuth2Api",
+      "required_resource": {
+        "type": "spreadsheet",
+        "resource_type": "application/vnd.google-apps.spreadsheet",
+        "prefill": {
+          "documentId": "id"
+        }
+      },
+      "has_children": "false",
+      "outputs": [
+        "row_object"
+      ],
+      "parameters": {
+        "pollTimes": {
+          "type": "enum",
+          "options": [
+            "everyMinute",
+            "every5Minutes",
+            "everyHour",
+            "custom"
+          ],
+          "default": "everyMinute",
+          "description": "How often to check the sheet for changes."
+        },
+        "documentId": {
+          "type": "string",
+          "example": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
+          "description": "The ID of the Google Sheets document to monitor."
+        },
+        "sheetName": {
+          "type": "string",
+          "default": "Sheet1",
+          "description": "The name of the sheet tab to watch."
+        },
+        "event": {
+          "type": "enum",
+          "options": [
+            "rowAdded",
+            "rowUpdated",
+            "anyChange"
+          ],
+          "default": "rowAdded",
+          "description": "The type of change that triggers the automation."
+        }
+      },
+      "default_config": {
+        "pollTimes": "everyMinute",
+        "sheetName": "Sheet1",
+        "event": "rowAdded"
+      },
+      "examples": [
+        "When a new row is added to Google Sheets",
+        "Monitor my Google Sheet for new entries",
+        "Trigger when the spreadsheet changes"
+      ],
+      "intent_keywords": [
+        "google sheets trigger",
+        "new sheet row",
+        "spreadsheet change"
+      ]
+    },
+    {
+      "id": "spreadsheet.append.google_sheets",
+      "name": "Google Sheets Append",
+      "type": "adapter",
+      "internal_only": false,
+      "parent": "spreadsheet.append",
+      "description": "Appends new rows to a Google Sheets spreadsheet using OAuth2 authentication. Receives data and maps it to specified columns in the target sheet. Can either always append new rows or update existing rows based on matching criteria. Supports data type conversion and custom column mapping.",
+      "is_trigger": "false",
+      "service": "google_sheets",
+      "n8n_node": "n8n-nodes-base.googleSheets",
+      "auth_type": "googleSheetsOAuth2Api",
+      "required_resource": {
+        "type": "spreadsheet",
+        "resource_type": "application/vnd.google-apps.spreadsheet",
+        "prefill": {
+          "documentId": "id"
+        }
+      },
+      "has_children": "false",
+      "outputs": [
+        "append_result"
+      ],
+      "parameters": {
+        "operation": {
+          "type": "enum",
+          "options": [
+            "appendOrUpdate",
+            "append"
+          ],
+          "default": "append",
+          "description": "Whether to always append or update matching rows."
+        },
+        "documentId": {
+          "type": "string",
+          "example": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
+          "description": "The ID of the Google Sheets document to append data to."
+        },
+        "sheetName": {
+          "type": "string",
+          "example": "Sheet1",
+          "description": "The target sheet tab within the spreadsheet."
+        },
+        "columns": {
+          "type": "mapping",
+          "description": "Defines how input data fields map to spreadsheet columns."
+        },
+        "convertFieldsToString": {
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether to coerce all values to text before inserting."
+        }
+      },
+      "default_config": {
+        "operation": "append",
+        "convertFieldsToString": "false",
+        "attemptToConvertTypes": "false"
+      },
+      "examples": [
+        "Add a new row to a Google Sheet",
+        "Save email snippet to Google Sheets",
+        "Append values into Sheet1"
+      ],
+      "intent_keywords": [
+        "google sheets",
+        "add row",
+        "append to sheet"
+      ]
+    },
+    {
+      "id": "database.create_record.notion",
+      "name": "Create Notion Database Page",
+      "type": "adapter",
+      "internal_only": false,
+      "parent": "database.create_record",
+      "description": "Creates a new page (row) in a Notion database using the Notion API. Accepts a database ID, a page title, and optional property values that map to the database's column schema.",
+      "is_trigger": "false",
+      "trigger_mode": null,
+      "service": "notion",
+      "n8n_node": "n8n-nodes-base.notion",
+      "n8n_resource": "databasePage",
+      "n8n_operation": "create",
+      "auth_type": "notionApi",
+      "required_resource": {
+        "type": "database",
+        "resource_type": "application/vnd.notion.database",
+        "prefill": {
+          "databaseId": "id"
+        }
+      },
+      "has_children": "false",
+      "outputs": [
+        "record_object"
+      ],
+      "parameters": {
+        "databaseId": {
+          "type": "string",
+          "description": "ID of the Notion database to create the page in."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the new page/row in the database."
+        },
+        "propertiesUi": {
+          "type": "object",
+          "description": "Key-value pairs mapping database property names to values (e.g. Sender, Snippet URL). Property keys must match the database schema."
+        }
+      },
+      "default_config": {},
+      "examples": [
+        "Create a new page in my Notion database",
+        "Add an entry to Notion",
+        "Log data to a Notion table"
+      ],
+      "intent_keywords": [
+        "notion",
+        "create page",
+        "add to notion",
+        "notion database"
+      ]
+    },
+    {
+      "id": "file_storage.trigger.google_drive",
+      "name": "Google Drive Trigger",
+      "type": "adapter",
+      "internal_only": false,
+      "parent": "file_storage.trigger",
+      "description": "Monitors a Google Drive folder for new or modified files using OAuth2 authentication. Polls at specified intervals and triggers when the selected file event occurs.",
+      "is_trigger": "true",
+      "trigger_mode": "polling",
+      "service": "google_drive",
+      "n8n_node": "n8n-nodes-base.googleDriveTrigger",
+      "auth_type": "googleDriveOAuth2Api",
+      "required_resource": {
+        "type": "folder",
+        "resource_type": "application/vnd.google-apps.folder",
+        "prefill": {
+          "folderToWatch": "id"
+        }
+      },
+      "has_children": "false",
+      "outputs": [
+        "file_object"
+      ],
+      "parameters": {
+        "pollTimes": {
+          "type": "enum",
+          "options": [
+            "everyMinute",
+            "every5Minutes",
+            "everyHour",
+            "custom"
+          ],
+          "default": "everyMinute",
+          "description": "How often to check the folder for new files."
+        },
+        "triggerOn": {
+          "type": "enum",
+          "options": [
+            "specificFolder",
+            "anyFolder"
+          ],
+          "default": "specificFolder",
+          "description": "Whether to monitor a specific folder or any folder in Drive."
+        },
+        "folderToWatch": {
+          "type": "string",
+          "description": "Google Drive folder ID to monitor. Required when triggerOn is 'specificFolder'."
+        },
+        "event": {
+          "type": "enum",
+          "options": [
+            "fileCreated",
+            "fileUpdated",
+            "fileDeleted"
+          ],
+          "default": "fileCreated",
+          "description": "The type of file event that triggers the automation."
+        }
+      },
+      "default_config": {
+        "pollTimes": "everyMinute",
+        "triggerOn": "specificFolder",
+        "event": "fileCreated"
+      },
+      "examples": [
+        "When a new file is added to my Google Drive folder",
+        "Monitor a Drive folder for uploads",
+        "Trigger when a document appears in Drive"
+      ],
+      "intent_keywords": [
+        "google drive",
+        "new file",
+        "folder trigger",
+        "drive upload"
+      ]
+    }
+  ]
+}
+
+=== USER VAULT (connected credentials and resources) ===
+{
+  "credentials": [
+    {
+      "auth_type": "gmailOAuth2",
+      "id": "mock-cred-gmail",
+      "name": "My Gmail Account",
+      "status": "ok"
+    },
+    {
+      "auth_type": "googleSheetsOAuth2Api",
+      "id": "mock-cred-google-sheets",
+      "name": "My Google Sheets Account",
+      "status": "ok"
+    },
+    {
+      "auth_type": "googleSheetsTriggerOAuth2Api",
+      "id": "mock-cred-google-sheets-trigger",
+      "name": "My Google Sheets Trigger Account",
+      "status": "ok"
+    },
+    {
+      "auth_type": "notionApi",
+      "id": "mock-cred-notion",
+      "name": "My Notion Account",
+      "status": "ok"
+    },
+    {
+      "auth_type": "googleDriveOAuth2Api",
+      "id": "mock-cred-google-drive",
+      "name": "My Google Drive Account",
+      "status": "ok"
+    }
+  ],
+  "resources": [
+    {
+      "fileId": "mock-sheet-messages",
+      "fileName": "Messages",
+      "resource_type": "application/vnd.google-apps.spreadsheet",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0,
+            "rowCount": 1000,
+            "columnCount": 26,
+            "columns": [
+              "message"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fileId": "mock-sheet-expenses",
+      "fileName": "Expenses",
+      "resource_type": "application/vnd.google-apps.spreadsheet",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0,
+            "rowCount": 1000,
+            "columnCount": 26
+          }
+        ],
+        "columns": [
+          "Expense name",
+          "Expense amount",
+          "Expense date"
+        ]
+      }
+    },
+    {
+      "fileId": "mock-notion-db-email-tracker",
+      "fileName": "Email Tracker",
+      "resource_type": "application/vnd.notion.database",
+      "details": {
+        "properties": [
+          "Name",
+          "Sender",
+          "Email Body"
+        ]
+      }
+    },
+    {
+      "fileId": "mock-folder-guidelines",
+      "fileName": "Guidelines",
+      "resource_type": "application/vnd.google-apps.folder"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "condition": "pipeline",
+  "scenario": 3,
+  "unit_id": "P2-S3",
+  "schema_valid": true,
+  "schema_errors": [],
+  "completeness": {
+    "trigger": "1/1",
+    "steps": "2/2",
+    "credentials": "2/2",
+    "resources": "1/1",
+    "score": 1.0
+  },
+  "exact_dimensions": {
+    "trigger_exact": false,
+    "steps_exact": false,
+    "credentials_exact": true,
+    "resources_exact": true
+  },
+  "n_param_divergences": 4,
+  "structure": {
+    "trigger_adapter": "spreadsheet.trigger.google_sheets",
+    "step_adapters": [
+      "email.send.gmail",
+      "email.label.gmail"
+    ],
+    "n_steps": 2
+  },
+  "divergences": {
+    "trigger": {
+      "adapter_gt": "spreadsheet.trigger.google_sheets",
+      "adapter_candidate": "spreadsheet.trigger.google_sheets",
+      "adapter_match": true,
+      "param_diffs": [
+        {
+          "param": "pollTimes",
+          "status": "differ",
+          "gt": "everyHour",
+          "candidate": "custom"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "adapter_gt": "email.send.gmail",
+        "adapter_candidate": "email.send.gmail",
+        "param_diffs": [
+          {
+            "param": "message",
+            "status": "differ",
+            "gt": "An expense has been added to the expenses sheet. The name is {{row_object.row['Expense name']}} and the amount is {{row_object.row['Expense amount']}} and the date is {{row_object.row['Expense date']}}",
+            "candidate": "{{row_object.row['Expense name']}}\n{{row_object.row['Expense amount']}}\n{{row_object.row['Expense date']}}"
+          },
+          {
+            "param": "subject",
+            "status": "differ",
+            "gt": "Expense added",
+            "candidate": "expense added"
+          }
+        ]
+      },
+      {
+        "adapter_gt": "email.label.gmail",
+        "adapter_candidate": "email.label.gmail",
+        "param_diffs": [
+          {
+            "param": "labelIds",
+            "status": "differ",
+            "gt": [
+              "Label_expenses"
+            ],
+            "candidate": [
+              "[\"Label_expenses\"]"
+            ]
+          }
+        ]
+      }
+    ],
+    "credentials": {
+      "gt": [
+        "gmailOAuth2",
+        "googleSheetsTriggerOAuth2Api"
+      ],
+      "candidate": [
+        "gmailOAuth2",
+        "googleSheetsTriggerOAuth2Api"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    },
+    "resources": {
+      "gt_ids": [
+        "mock-sheet-expenses"
+      ],
+      "candidate_ids": [
+        "mock-sheet-expenses"
+      ],
+      "gt_names": [
+        "Expenses"
+      ],
+      "candidate_names": [
+        "Expenses"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    }
+  },
+  "source_file": "thesis-new-pipeline/scenarios/user-aspecs/P2-scenario-3_2026-06-08T18-04-44.json"
+}

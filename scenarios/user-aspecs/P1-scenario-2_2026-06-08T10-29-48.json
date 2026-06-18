@@ -1,0 +1,125 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Archive CEO emails and notify Erik",
+    "description": "In my Gmail account, I receive mails from ceo@acmecorp.com in the Inbox. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, using the email subject line as the title, with the fields Sender and Email Body. The Sender field should contain the sender\u2019s email address, and the Email Body field should contain the full email body. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from the sender\u2019s email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check the Inbox for new messages every hour.",
+    "created_at": "2026-06-08T08:29:48.336367Z",
+    "tags": []
+  },
+  "credentials": {
+    "gmailOAuth2": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    },
+    "notionApi": {
+      "auth_type": "notionApi",
+      "service": "notion",
+      "credential_id": "mock-cred-notion",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "notion_database": {
+      "service": "notion",
+      "type": "database",
+      "id": "mock-notion-db-email-tracker",
+      "name": "Email Tracker",
+      "details": {
+        "properties": [
+          "Name",
+          "Sender",
+          "Email Body"
+        ]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "email.trigger.gmail",
+    "adapter_name": "Gmail Trigger",
+    "service": "gmail",
+    "is_trigger": true,
+    "configured_parameters": {
+      "filters": {
+        "from": "ceo@acmecorp.com"
+      },
+      "pollTimes": "everyHour",
+      "folder": "inbox"
+    },
+    "parameter_origin": {
+      "filters": "inferred",
+      "pollTimes": "user",
+      "folder": "user"
+    },
+    "credential_ref": "gmailOAuth2",
+    "trigger_mode": "polling",
+    "outputs": [
+      "email_object"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "database.create_record.notion",
+      "adapter_name": "Create Notion Database Page",
+      "service": "notion",
+      "is_trigger": false,
+      "configured_parameters": {
+        "databaseId": "mock-notion-db-email-tracker",
+        "title": "{{email_object.subject}}",
+        "propertiesUi": {
+          "Sender": "{{email_object.from}}",
+          "Email Body": "{{email_object.body}}"
+        }
+      },
+      "parameter_origin": {
+        "databaseId": "system",
+        "title": "user",
+        "propertiesUi": "user"
+      },
+      "credential_ref": "notionApi",
+      "outputs": [
+        "record_object"
+      ],
+      "input_from": "trigger_1"
+    },
+    {
+      "step_id": "step_2",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "is_trigger": false,
+      "configured_parameters": {
+        "emailType": "text",
+        "sendTo": "erik@fiber.nl",
+        "subject": "please respond to customer",
+        "message": "The CEO of Acme Corp has reached out from {{email_object.from}}. I would like you to respond to them."
+      },
+      "parameter_origin": {
+        "emailType": "inferred",
+        "sendTo": "user",
+        "subject": "user",
+        "message": "user"
+      },
+      "credential_ref": "gmailOAuth2",
+      "outputs": [
+        "send_result"
+      ],
+      "input_from": "step_1"
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "type": "main"
+    }
+  ]
+}

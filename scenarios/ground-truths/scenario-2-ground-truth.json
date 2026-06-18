@@ -1,0 +1,118 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Customer Email Logger and Colleague Notifier",
+    "description": "When an email arrives from a specific customer, log it to the Email Tracker Notion database and send a follow-up notification to a colleague.",
+    "created_at": "2026-05-23T00:00:00Z",
+    "tags": ["email", "notion", "follow-up"]
+  },
+  "credentials": {
+    "gmail_cred": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    },
+    "notion_cred": {
+      "auth_type": "notionApi",
+      "service": "notion",
+      "credential_id": "mock-cred-notion",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "email_tracker_db": {
+      "service": "notion",
+      "type": "database",
+      "id": "mock-notion-db-email-tracker",
+      "name": "Email Tracker",
+      "details": {
+        "properties": ["Name", "Sender", "Email Body"]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "email.trigger.gmail",
+    "adapter_name": "Gmail Trigger",
+    "service": "gmail",
+    "description": "Fires when a new email arrives from ceo@acmecorp.com, checked every hour.",
+    "is_trigger": true,
+    "trigger_mode": "polling",
+    "outputs": ["email_object"],
+    "credential_ref": "gmail_cred",
+    "configured_parameters": {
+      "pollTimes": "everyHour",
+      "filters": {
+        "from": "ceo@acmecorp.com"
+      },
+      "folder": "inbox"
+    },
+    "parameter_origin": {
+      "pollTimes": "user",
+      "filters": "user",
+      "folder": "default"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "database.create_record.notion",
+      "adapter_name": "Create Notion Database Page",
+      "service": "notion",
+      "description": "Creates a new page in the Email Tracker Notion database with the sender address and email snippet from the triggering email.",
+      "is_trigger": false,
+      "input_from": "trigger_1",
+      "outputs": ["record_object"],
+      "credential_ref": "notion_cred",
+      "configured_parameters": {
+        "databaseId": "mock-notion-db-email-tracker",
+        "title": "Mail",
+        "propertiesUi": {
+          "Sender": "{{email_object.from}}",
+          "Email Body": "{{email_object.body}}"
+        }
+      },
+      "parameter_origin": {
+        "databaseId": "system",
+        "title": "user",
+        "propertiesUi": "inferred"
+      }
+    },
+    {
+      "step_id": "step_2",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "description": "Sends a follow-up email to a colleague notifying them to respond to the customer.",
+      "is_trigger": false,
+      "input_from": "step_1",
+      "outputs": ["send_result"],
+      "credential_ref": "gmail_cred",
+      "configured_parameters": {
+        "sendTo": "erik@fiber.nl",
+        "subject": "Respond to Customer",
+        "emailType": "text",
+        "message": "The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!"
+      },
+      "parameter_origin": {
+        "sendTo": "user",
+        "subject": "user",
+        "emailType": "default",
+        "message": "user"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "type": "main"
+    }
+  ]
+}

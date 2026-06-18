@@ -1,0 +1,131 @@
+{
+  "name": "aspec scenario 3",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1WEYlQrfPtGso3ss1rZ_C5AGe47eQhBB1G1rL6m3kf3c",
+          "mode": "list",
+          "cachedResultName": "Expenses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WEYlQrfPtGso3ss1rZ_C5AGe47eQhBB1G1rL6m3kf3c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WEYlQrfPtGso3ss1rZ_C5AGe47eQhBB1G1rL6m3kf3c/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e0d111d1-2342-4b01-a62d-1ade22c2390b",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "IP8R696Ivph3E3bC",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "expenses@acmecorp.com",
+        "subject": "Expense added",
+        "emailType": "text",
+        "message": "=An expense has been added to the expenses sheet. The name is {{ $json['Expense name'] }} and the amount is {{ $json['Expense amount'] }} and the date is {{ $json['Expense date'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "183a8880-4feb-40a4-a5c6-b209a8c04ae4",
+      "name": "Send a message",
+      "webhookId": "87e36cd0-fcbd-4d1e-8df5-d90ca71022cf",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vgpQZXONygUdAgYt",
+          "name": "Gmail account jan@acmecorp.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_9087225150726030636"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "b184a341-be43-433a-97ad-89e810827ddd",
+      "name": "Add label to message",
+      "webhookId": "be404a07-8857-4f75-aa23-145fd715aaf3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vgpQZXONygUdAgYt",
+          "name": "Gmail account jan@acmecorp.com"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b3b128a0-15b8-4b72-9b97-a2b9d2d849da",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aacd71ad1bb8197289596731de42e807bb5e0b47fbe1301d275db3df334a2dfe"
+  },
+  "id": "eb8yLyiGoB9PR0al",
+  "tags": []
+}

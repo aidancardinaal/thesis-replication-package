@@ -1,0 +1,130 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Expense sheet email alert",
+    "description": "I manage expenses in a Google sheet called expenses. It has three columns: expense name, expense amount, and expense date. Every five minutes, check the sheet for a new expense row. Whenever a new expense row is added and all three expense fields are filled in, send an email from Gmail to expenses@acmecorp.com with the subject expense added and this message: \"An expense has been added to the expense sheet. Expense name: [Expense name] Expense amount: [Expense amount] Expense date: [Expense date]\". The message should include only the actual expense name, expense amount, and expense date from the new row that was added to the Google sheet. After sending the email, use the ID of that sent email to apply the Gmail label expenses.",
+    "created_at": "2026-06-07T19:38:48.325463Z",
+    "tags": []
+  },
+  "credentials": {
+    "googleSheetsTriggerOAuth2Api": {
+      "auth_type": "googleSheetsTriggerOAuth2Api",
+      "service": "google_sheets",
+      "credential_id": "mock-cred-google-sheets-trigger",
+      "status": "ok"
+    },
+    "gmailOAuth2": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "google_sheets_spreadsheet": {
+      "service": "google_sheets",
+      "type": "spreadsheet",
+      "id": "mock-sheet-expenses",
+      "name": "Expenses",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0,
+            "rowCount": 1000,
+            "columnCount": 26
+          }
+        ],
+        "columns": [
+          "Expense name",
+          "Expense amount",
+          "Expense date"
+        ]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "spreadsheet.trigger.google_sheets",
+    "adapter_name": "Google Sheets Trigger",
+    "service": "google_sheets",
+    "is_trigger": true,
+    "configured_parameters": {
+      "documentId": "mock-sheet-expenses",
+      "sheetName": "Sheet1",
+      "event": "rowAdded",
+      "pollTimes": "every5Minutes"
+    },
+    "parameter_origin": {
+      "documentId": "system",
+      "sheetName": "inferred",
+      "event": "inferred",
+      "pollTimes": "user"
+    },
+    "credential_ref": "googleSheetsTriggerOAuth2Api",
+    "trigger_mode": "polling",
+    "outputs": [
+      "row_object"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "is_trigger": false,
+      "configured_parameters": {
+        "emailType": "text",
+        "sendTo": "expenses@acmecorp.com",
+        "subject": "expense added",
+        "message": "An expense has been added to the expense sheet.\nExpense name: {{row_object.row[\"Expense name\"]}}\nExpense amount: {{row_object.row[\"Expense amount\"]}}\nExpense date: {{row_object.row[\"Expense date\"]}}"
+      },
+      "parameter_origin": {
+        "emailType": "inferred",
+        "sendTo": "user",
+        "subject": "user",
+        "message": "user"
+      },
+      "credential_ref": "gmailOAuth2",
+      "outputs": [
+        "send_result"
+      ],
+      "input_from": "trigger_1"
+    },
+    {
+      "step_id": "step_2",
+      "adapter_id": "email.label.gmail",
+      "adapter_name": "Add Label to Gmail Message",
+      "service": "gmail",
+      "is_trigger": false,
+      "configured_parameters": {
+        "messageId": "{{send_result.messageId}}",
+        "labelIds": [
+          "['expenses']"
+        ]
+      },
+      "parameter_origin": {
+        "messageId": "user",
+        "labelIds": "user"
+      },
+      "credential_ref": "gmailOAuth2",
+      "outputs": [
+        "label_result"
+      ],
+      "input_from": "step_1"
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "type": "main"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Expense Alert and Label",
+    "description": "When a new expense row is added to the Expenses Google Sheet, send a notification email to the finance department and label the sent message.",
+    "created_at": "2026-05-23T00:00:00Z",
+    "tags": ["expenses", "email", "google-sheets"]
+  },
+  "credentials": {
+    "google_sheets_trigger_cred": {
+      "auth_type": "googleSheetsTriggerOAuth2Api",
+      "service": "google_sheets",
+      "credential_id": "mock-cred-google-sheets-trigger",
+      "status": "ok"
+    },
+    "gmail_cred": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "expenses_sheet": {
+      "service": "google_sheets",
+      "type": "spreadsheet",
+      "id": "mock-sheet-expenses",
+      "name": "Expenses",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0
+          }
+        ],
+        "columns": ["Expense name", "Expense amount", "Expense date"]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "spreadsheet.trigger.google_sheets",
+    "adapter_name": "Google Sheets Trigger",
+    "service": "google_sheets",
+    "description": "Fires when a new row is added to the Expenses spreadsheet, checked every hour.",
+    "is_trigger": true,
+    "trigger_mode": "polling",
+    "outputs": ["row_object"],
+    "credential_ref": "google_sheets_trigger_cred",
+    "configured_parameters": {
+      "pollTimes": "everyHour",
+      "documentId": "mock-sheet-expenses",
+      "sheetName": "Sheet1",
+      "event": "rowAdded"
+    },
+    "parameter_origin": {
+      "pollTimes": "user",
+      "documentId": "system",
+      "sheetName": "default",
+      "event": "default"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "description": "Sends a notification email to the finance department with the expense name, amount, and date from the triggering row.",
+      "is_trigger": false,
+      "input_from": "trigger_1",
+      "outputs": ["send_result"],
+      "credential_ref": "gmail_cred",
+      "configured_parameters": {
+        "sendTo": "expenses@acmecorp.com",
+        "subject": "Expense added",
+        "emailType": "text",
+        "message": "An expense has been added to the expenses sheet. The name is {{row_object.row['Expense name']}} and the amount is {{row_object.row['Expense amount']}} and the date is {{row_object.row['Expense date']}}"
+      },
+      "parameter_origin": {
+        "sendTo": "user",
+        "subject": "user",
+        "emailType": "default",
+        "message": "user"
+      }
+    },
+    {
+      "step_id": "step_2",
+      "adapter_id": "email.label.gmail",
+      "adapter_name": "Add Label to Gmail Message",
+      "service": "gmail",
+      "description": "Applies the expenses label to the sent notification email.",
+      "is_trigger": false,
+      "input_from": "step_1",
+      "outputs": ["label_result"],
+      "credential_ref": "gmail_cred",
+      "configured_parameters": {
+        "messageId": "{{send_result.messageId}}",
+        "labelIds": ["Label_expenses"]
+      },
+      "parameter_origin": {
+        "messageId": "inferred",
+        "labelIds": "user"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "type": "main"
+    }
+  ]
+}

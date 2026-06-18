@@ -1,0 +1,9 @@
+participant,scenario,clarifying,configuring_resources,configuring_parameters,total_elicited,source_file
+P1,1,3,1,4,8,P1-scenario-1_2026-06-08T10-05-22.json
+P1,2,5,0,7,12,P1-scenario-2_2026-06-08T10-29-48.json
+P2,3,3,1,6,10,P2-scenario-3_2026-06-08T18-04-44.json
+P2,4,3,0,4,7,P2-scenario-4_2026-06-08T18-11-56.json
+P3,1,3,1,4,8,P3-scenario-1_2026-06-09T20-12-41.json
+P3,2,3,0,6,9,P3-scenario-2_2026-06-09T20-07-02.json
+P4,3,3,1,6,10,P4-scenario-3_2026-06-11T11-25-39.json
+P4,4,3,0,4,7,P4-scenario-4_2026-06-11T11-17-36.json

@@ -1,0 +1,90 @@
+{
+  "aspec_version": "1.0.0",
+  "metadata": {
+    "name": "Notify finance when a file is added to Guidelines",
+    "description": "When a new file is added to the Google Drive Guidelines folder, send an email from Gmail to finance@acmecorp.com including the file name and link."
+  },
+  "credentials": {
+    "gmail": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    },
+    "google_drive": {
+      "auth_type": "googleDriveOAuth2Api",
+      "service": "google_drive",
+      "credential_id": "mock-cred-google-drive",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "guidelines_folder": {
+      "service": "google_drive",
+      "type": "folder",
+      "id": "mock-folder-guidelines",
+      "name": "Guidelines",
+      "details": {
+        "resource_type": "application/vnd.google-apps.folder"
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "file_storage.trigger.google_drive",
+    "adapter_name": "Google Drive Trigger",
+    "service": "google_drive",
+    "description": "Watch the Guidelines folder for newly added files.",
+    "is_trigger": true,
+    "trigger_mode": "polling",
+    "credential_ref": "google_drive",
+    "configured_parameters": {
+      "pollTimes": "everyMinute",
+      "triggerOn": "specificFolder",
+      "folderToWatch": "mock-folder-guidelines",
+      "event": "fileCreated"
+    },
+    "parameter_origin": {
+      "pollTimes": "default",
+      "triggerOn": "default",
+      "folderToWatch": "user",
+      "event": "default"
+    },
+    "outputs": [
+      "file_object"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "send_email_1",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "description": "Send a notification email to finance with the new file details.",
+      "input_from": "trigger_1",
+      "outputs": [
+        "send_result"
+      ],
+      "credential_ref": "gmail",
+      "configured_parameters": {
+        "sendTo": "finance@acmecorp.com",
+        "subject": "Guideline added",
+        "emailType": "text",
+        "message": "Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.\n\nFile name: {{$json.name}}\nFile link: {{$json.webViewLink}}"
+      },
+      "parameter_origin": {
+        "sendTo": "user",
+        "subject": "user",
+        "emailType": "default",
+        "message": "user"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "send_email_1",
+      "type": "main"
+    }
+  ]
+}

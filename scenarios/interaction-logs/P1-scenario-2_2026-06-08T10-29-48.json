@@ -1,0 +1,110 @@
+{
+  "scenario": "2",
+  "timestamp": "2026-06-08T10-29-48",
+  "initial_description": "in my Gmail account i receive mails from ceo@acmecorp.com. Every mail from this sender should be filed as follows:\n1. save this mail to my Notion database under Email Tracker. Store the sender's email address and the email body. Mail this under MAIL\n2 send an email to erik@fiber.nl. Subject: Please respond to customer. With message: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. (Include sender's email address)",
+  "interactions": [
+    {
+      "stage": "clarifying",
+      "question": "In your Notion database Email Tracker, should the email be saved as a new item with the sender\u2019s email address and full email body in separate fields, or do you want a different field layout?",
+      "answer": "sender's email address and full email body",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, with the sender\u2019s email address and the full email body in separate fields. File this under MAIL. 2. Send an email to erik@fiber.nl with the subject: Please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include the sender\u2019s email address."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email sent to erik@fiber.nl include the full email body, or only the sender\u2019s email address and the message you wrote?",
+      "answer": "to erik only the sender's email address and my message",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, with the sender\u2019s email address and the full email body in separate fields. File this under MAIL. 2. Send an email to erik@fiber.nl with the subject: Please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the Notion item also include the email subject, or only the sender\u2019s email address and full email body?",
+      "answer": "also include email subject",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, with the sender\u2019s email address, the email subject, and the full email body in separate fields. File this under MAIL. 2. Send an email to erik@fiber.nl with the subject: Please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message."
+    },
+    {
+      "stage": "clarifying",
+      "question": "What should the subject line be for the email to erik@fiber.nl?",
+      "answer": "please respond to customer",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, with the sender\u2019s email address, the email subject, and the full email body in separate fields. File this under MAIL. 2. Send an email to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message."
+    },
+    {
+      "stage": "clarifying",
+      "question": "What should I use to send the email to erik@fiber.nl: Gmail or Outlook?",
+      "answer": "GMAIL",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, with the sender\u2019s email address, the email subject, and the full email body in separate fields. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message."
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "How often would you like Gmail to check for new messages \u2014 every minute, or a different schedule?",
+      "answer": "every hour",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, with the sender\u2019s email address, the email subject, and the full email body in separate fields. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check for new messages every hour.",
+      "parameter_set": {
+        "param_name": "pollTimes",
+        "value": "everyHour"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Which Gmail folder should I watch for new messages \u2014 the Inbox, or a different folder?",
+      "answer": "inbox",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com in the Inbox. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, with the sender\u2019s email address, the email subject, and the full email body in separate fields. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check the Inbox for new messages every hour.",
+      "parameter_set": {
+        "param_name": "folder",
+        "value": "inbox"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I use the email\u2019s subject line as the title for the new Notion entry, or would you like something different?",
+      "answer": "emails subject line",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com in the Inbox. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, using the email subject line as the title, with the sender\u2019s email address, the email subject, and the full email body in separate fields. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check the Inbox for new messages every hour.",
+      "parameter_set": {
+        "param_name": "title",
+        "value": "{{email_object.subject}}"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "What details should be saved in your Notion item, and what should each field contain?",
+      "answer": "Exactly; \"Sender\" and \"Email Body\"",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com in the Inbox. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, using the email subject line as the title, with the fields Sender and Email Body. The Sender field should contain the sender\u2019s email address, and the Email Body field should contain the full email body. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check the Inbox for new messages every hour.",
+      "parameter_set": {
+        "param_name": "propertiesUi",
+        "value": {
+          "Sender": "{{email_object.from}}",
+          "Email Body": "{{email_object.body}}"
+        }
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I send this email to erik@fiber.nl, or would you like to change the recipient?",
+      "answer": "erik@fiber.nl",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com in the Inbox. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, using the email subject line as the title, with the fields Sender and Email Body. The Sender field should contain the sender\u2019s email address, and the Email Body field should contain the full email body. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check the Inbox for new messages every hour.",
+      "parameter_set": {
+        "param_name": "sendTo",
+        "value": "erik@fiber.nl"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the subject line be \u201cplease respond to customer\u201d, or would you like to change it?",
+      "answer": "please respond to customer",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com in the Inbox. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, using the email subject line as the title, with the fields Sender and Email Body. The Sender field should contain the sender\u2019s email address, and the Email Body field should contain the full email body. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from their email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check the Inbox for new messages every hour.",
+      "parameter_set": {
+        "param_name": "subject",
+        "value": "please respond to customer"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the email message be: \u201cThe CEO of Acme Corp has reached out from [from]. I would like you to respond to them.\u201d? Please confirm or correct it. (The bracketed parts \u2014 like [Expense name] \u2014 will be automatically replaced with the real values when the automation runs.)",
+      "answer": "yes",
+      "updated_description": "In my Gmail account, I receive mails from ceo@acmecorp.com in the Inbox. Every mail from this sender should be filed as follows: 1. Save this mail to my Notion database under Email Tracker as a new item, using the email subject line as the title, with the fields Sender and Email Body. The Sender field should contain the sender\u2019s email address, and the Email Body field should contain the full email body. File this under MAIL. 2. Send an email from Gmail to erik@fiber.nl with the subject: please respond to customer. In the message, say: The CEO of Acme Corp has reached out from the sender\u2019s email address. I would like you to respond to them. Include only the sender\u2019s email address and my message. Gmail should check the Inbox for new messages every hour.",
+      "parameter_set": {
+        "param_name": "message",
+        "value": "The CEO of Acme Corp has reached out from {{email_object.from}}. I would like you to respond to them."
+      }
+    }
+  ]
+}

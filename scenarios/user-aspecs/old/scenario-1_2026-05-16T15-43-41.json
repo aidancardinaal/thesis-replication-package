@@ -1,0 +1,104 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Log New Gmail Messages to Google Sheets",
+    "description": "Every 5 minutes, check Gmail for new emails. When a new email arrives, add a short preview of the message as a new row in the Google Sheet named Messages, in the tab called Sheet1, and put the email preview in the message column for every new email as plain text.",
+    "created_at": "2026-05-16T13:43:41.904851Z",
+    "tags": []
+  },
+  "credentials": {
+    "gmailOAuth2": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    },
+    "googleSheetsOAuth2Api": {
+      "auth_type": "googleSheetsOAuth2Api",
+      "service": "google_sheets",
+      "credential_id": "mock-cred-google-sheets",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "google_sheets_spreadsheet": {
+      "service": "google_sheets",
+      "type": "spreadsheet",
+      "id": "mock-sheet-messages",
+      "name": "Messages",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0,
+            "rowCount": 1000,
+            "columnCount": 26,
+            "columns": [
+              "message"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "email.trigger.gmail",
+    "adapter_name": "Gmail Trigger",
+    "service": "gmail",
+    "is_trigger": true,
+    "configured_parameters": {
+      "folder": "inbox",
+      "pollTimes": "every5Minutes",
+      "filters": "{}"
+    },
+    "parameter_origin": {
+      "folder": "inferred",
+      "pollTimes": "user",
+      "filters": "user"
+    },
+    "credential_ref": "gmailOAuth2",
+    "trigger_mode": "polling",
+    "outputs": [
+      "email_object"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "spreadsheet.append.google_sheets",
+      "adapter_name": "Google Sheets Append",
+      "service": "google_sheets",
+      "is_trigger": false,
+      "configured_parameters": {
+        "documentId": "mock-sheet-messages",
+        "operation": "append",
+        "sheetName": "Sheet1",
+        "columns": "{'message': '{email_object.snippet}'}",
+        "convertFieldsToString": false
+      },
+      "parameter_origin": {
+        "documentId": "system",
+        "operation": "user",
+        "sheetName": "user",
+        "columns": "user",
+        "convertFieldsToString": "user"
+      },
+      "credential_ref": "googleSheetsOAuth2Api",
+      "inputs": [
+        "data_object"
+      ],
+      "outputs": [
+        "append_result"
+      ],
+      "input_from": "trigger_1"
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    }
+  ]
+}

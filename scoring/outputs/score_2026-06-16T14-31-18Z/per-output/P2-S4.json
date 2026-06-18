@@ -1,0 +1,94 @@
+{
+  "condition": "pipeline",
+  "scenario": 4,
+  "unit_id": "P2-S4",
+  "schema_valid": true,
+  "schema_errors": [],
+  "completeness": {
+    "trigger": "1/1",
+    "steps": "1/1",
+    "credentials": "2/2",
+    "resources": "1/1",
+    "score": 1.0
+  },
+  "exact_dimensions": {
+    "trigger_exact": false,
+    "steps_exact": false,
+    "credentials_exact": true,
+    "resources_exact": true
+  },
+  "n_param_divergences": 3,
+  "structure": {
+    "trigger_adapter": "file_storage.trigger.google_drive",
+    "step_adapters": [
+      "email.send.gmail"
+    ],
+    "n_steps": 1
+  },
+  "divergences": {
+    "trigger": {
+      "adapter_gt": "file_storage.trigger.google_drive",
+      "adapter_candidate": "file_storage.trigger.google_drive",
+      "adapter_match": true,
+      "param_diffs": [
+        {
+          "param": "pollTimes",
+          "status": "differ",
+          "gt": "everyMinute",
+          "candidate": "everyHour"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "adapter_gt": "email.send.gmail",
+        "adapter_candidate": "email.send.gmail",
+        "param_diffs": [
+          {
+            "param": "message",
+            "status": "differ",
+            "gt": "Dear finance department, \n\nSomething with the following name: {{file_object.name}} was added to the guideline folder. Please check whether this is correct. See the following link: {{file_object.webViewLink}}\n\n",
+            "candidate": "Link to the file: {{file_object.webViewLink}}."
+          },
+          {
+            "param": "subject",
+            "status": "differ",
+            "gt": "Guideline added",
+            "candidate": "guidline added"
+          }
+        ]
+      }
+    ],
+    "credentials": {
+      "gt": [
+        "gmailOAuth2",
+        "googleDriveOAuth2Api"
+      ],
+      "candidate": [
+        "gmailOAuth2",
+        "googleDriveOAuth2Api"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    },
+    "resources": {
+      "gt_ids": [
+        "mock-folder-guidelines"
+      ],
+      "candidate_ids": [
+        "mock-folder-guidelines"
+      ],
+      "gt_names": [
+        "Guidelines"
+      ],
+      "candidate_names": [
+        "Guidelines"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    }
+  },
+  "source_file": "thesis-new-pipeline/scenarios/user-aspecs/P2-scenario-4_2026-06-08T18-11-56.json"
+}

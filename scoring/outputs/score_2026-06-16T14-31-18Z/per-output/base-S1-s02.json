@@ -1,0 +1,85 @@
+{
+  "condition": "baseline",
+  "scenario": 1,
+  "unit_id": "base-S1-s02",
+  "schema_valid": true,
+  "schema_errors": [],
+  "completeness": {
+    "trigger": "1/1",
+    "steps": "1/1",
+    "credentials": "2/2",
+    "resources": "1/1",
+    "score": 1.0
+  },
+  "exact_dimensions": {
+    "trigger_exact": true,
+    "steps_exact": false,
+    "credentials_exact": true,
+    "resources_exact": true
+  },
+  "n_param_divergences": 1,
+  "structure": {
+    "trigger_adapter": "email.trigger.gmail",
+    "step_adapters": [
+      "spreadsheet.append.google_sheets"
+    ],
+    "n_steps": 1
+  },
+  "divergences": {
+    "trigger": {
+      "adapter_gt": "email.trigger.gmail",
+      "adapter_candidate": "email.trigger.gmail",
+      "adapter_match": true,
+      "param_diffs": []
+    },
+    "steps": [
+      {
+        "adapter_gt": "spreadsheet.append.google_sheets",
+        "adapter_candidate": "spreadsheet.append.google_sheets",
+        "param_diffs": [
+          {
+            "param": "columns",
+            "status": "differ",
+            "gt": {
+              "message": "{{email_object.body}}"
+            },
+            "candidate": {
+              "message": "{{$json.body}}"
+            }
+          }
+        ]
+      }
+    ],
+    "credentials": {
+      "gt": [
+        "gmailOAuth2",
+        "googleSheetsOAuth2Api"
+      ],
+      "candidate": [
+        "gmailOAuth2",
+        "googleSheetsOAuth2Api"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    },
+    "resources": {
+      "gt_ids": [
+        "mock-sheet-messages"
+      ],
+      "candidate_ids": [
+        "mock-sheet-messages"
+      ],
+      "gt_names": [
+        "Messages"
+      ],
+      "candidate_names": [
+        "Messages"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    }
+  },
+  "source_file": "thesis-new-pipeline/baseline/outputs/run_2026-06-16T14-06-51Z/scenario-1/sample-02.json"
+}

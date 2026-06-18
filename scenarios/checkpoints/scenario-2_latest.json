@@ -1,0 +1,21 @@
+{
+  "scenario": "2",
+  "saved_at": "2026-06-07T20:02:09.825848",
+  "status": "clarifying",
+  "automation": {
+    "description_of_automation": "Whenever an email arrives from ceo@acmecorp.com, save that email to my Notion database called email tracker and store the sender's email address and the email body. Then send an email from Gmail to my colleague at erik@fiber.nl with the subject \"Respond to customer\" and the message saying, \"The CEO of Acme Corp has reached out from their email address, respond to them.\" This message should include the sender's email address.",
+    "status": "clarifying",
+    "tools": {
+      "trigger": null,
+      "actions": []
+    },
+    "resources": {},
+    "credentials": {},
+    "metadata_name": null,
+    "conversation_history": ""
+  },
+  "clarification_history": [],
+  "clarification_rounds": 0,
+  "interaction_log": [],
+  "initial_description": "Whenever an email arrives from ceo@acmecorp.com, save that email to my Notion database called email tracker and store the sender's email address and the email body. Then send an email from Gmail to my colleague at erik@fiber.nl with the subject \"Respond to customer\" and the message saying, \"The CEO of Acme Corp has reached out from their email address, respond to them.\" This message should include the sender's email address."
+}

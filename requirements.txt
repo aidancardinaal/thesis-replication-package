@@ -1,0 +1,8 @@
+langchain-core
+langchain-openai
+langchain-ollama
+python-dotenv
+pydantic
+streamlit
+jsonschema
+python-docx

@@ -1,0 +1,9 @@
+scenario,condition,adapter_valid_ok,match,model_error,participant_divergence,system_error
+1,baseline,0,0,3,0,0
+1,pipeline,0,0,0,6,0
+2,baseline,3,6,3,0,0
+2,pipeline,0,3,0,3,2
+3,baseline,3,3,3,0,0
+3,pipeline,0,2,0,3,2
+4,baseline,0,3,0,0,0
+4,pipeline,0,2,0,2,1

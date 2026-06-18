@@ -1,0 +1,9 @@
+scenario,condition,n,corr_trigger,corr_steps,corr_credentials,corr_resources
+1,baseline,3,1.0,0.875,1.0,1.0
+1,pipeline,2,0.875,0.8125,1.0,1.0
+2,baseline,3,1.0,0.9091,1.0,1.0
+2,pipeline,2,1.0,0.8182,1.0,1.0
+3,baseline,3,1.0,0.9,1.0,1.0
+3,pipeline,2,1.0,0.85,1.0,1.0
+4,baseline,3,1.0,1.0,1.0,1.0
+4,pipeline,2,1.0,0.8571,1.0,1.0

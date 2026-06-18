@@ -1,0 +1,5 @@
+scenario,n_sessions,clarifying_mean,resources_mean,parameters_mean,total_mean
+1,2,3.0,1.0,4.0,8.0
+2,2,4.0,0.0,6.5,10.5
+3,2,3.0,1.0,6.0,10.0
+4,2,3.0,0.0,4.0,7.0

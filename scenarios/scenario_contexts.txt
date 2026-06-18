@@ -1,0 +1,21 @@
+Scenario 1, 2 nodes, is about receiving all emails and adding the body to a Google Sheet.
+
+Scenario 2, 3 nodes, is about filtering specific customer emails and immediately following up with them by entering the email into a notion database and then sending an email to a colleague, to follow
+up immediately.
+
+When i receive an email from a certain customer (ceo@acmecorp.com), i want add that email to my notion database (in email tracker db as "Mail") (save sender and and then send an email to my colleague (erik@fiber.nl) to make sure he follows up immediately with the client. This should happen every hour. 
+
+The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!
+
+"when i receive an email from a customer, i want to add it to my notion and then send an email to my colleague to make sure he takes action"
+
+Scenario 3, 3 nodes, is about expenses being added to an expense google sheet and then we send an email to our finance department with the details and then we label the sent email with the expenses label. 
+
+If an expense is added to my google sheet, send email to our finance department and then label that email
+
+Scenario 4, 2 nodes, checks every minute if a guideline (new file) was added to a google drive folder and then sends email to finance department with details to check if it is correct.
+
+
+
+"automatically check if new guideline was added to google drive, if yes send email to our expenses department"
+

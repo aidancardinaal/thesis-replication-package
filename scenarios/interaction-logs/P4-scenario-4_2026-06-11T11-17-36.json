@@ -1,0 +1,65 @@
+{
+  "scenario": "4",
+  "timestamp": "2026-06-11T11-17-36",
+  "initial_description": "I have a google drive folder called 'Guidelines' whenever a new file is added i need you to send an email to finance@acmecorp.com with the subject \"guideline added\" and a message in the mail: \"Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.\" (the message should include the file's name and a link to the file).\nIf the assistant asks about a detail that is not described on this card, just choose whatever makes sense to you. There is no wrong answer.\"",
+  "interactions": [
+    {
+      "stage": "clarifying",
+      "question": "Should the email include the file name and link in the message body, or also in the subject line?",
+      "answer": "the message is in body and the file name is not important to the mail",
+      "updated_description": "I have a Google Drive folder called 'Guidelines'. Whenever a new file is added, send an email to finance@acmecorp.com with the subject 'guideline added' and this message in the body: 'Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.' Include a link to the file in the message body. The file name is not important to the email."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email be sent for every new file added to the folder, or only for certain file types?",
+      "answer": "every new one",
+      "updated_description": "I have a Google Drive folder called 'Guidelines'. Whenever every new file is added, send an email to finance@acmecorp.com with the subject 'guideline added' and this message in the body: 'Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.' Include a link to the file in the message body. The file name is not important to the email."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email include the link to the new file only, or also the folder link to 'Guidelines'?",
+      "answer": "no only new",
+      "updated_description": "I have a Google Drive folder called 'Guidelines'. Whenever a new file is added, send an email to finance@acmecorp.com with the subject 'guideline added' and this message in the body: 'Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.' Include a link to the new file only in the message body. The file name is not important to the email."
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "How often would you like me to check the Guidelines folder for new files \u2014 every minute, or less often?",
+      "answer": "every minute\n",
+      "updated_description": "I have a Google Drive folder called 'Guidelines'. Check it every minute, and whenever a new file is added, send an email to finance@acmecorp.com with the subject 'guideline added' and this message in the body: 'Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.' Include a link to the new file only in the message body. The file name is not important to the email.",
+      "parameter_set": {
+        "param_name": "pollTimes",
+        "value": "everyMinute"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I send the email to finance@acmecorp.com, or would you like to change it?",
+      "answer": "yes to that mail",
+      "updated_description": "I have a Google Drive folder called 'Guidelines'. Check it every minute, and whenever a new file is added, send an email to finance@acmecorp.com with the subject 'guideline added' and this message in the body: 'Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.' Include a link to the new file only in the message body. The file name is not important to the email.",
+      "parameter_set": {
+        "param_name": "sendTo",
+        "value": "finance@acmecorp.com"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the subject line be \"guideline added\", or would you like to change it?",
+      "answer": "no keep it",
+      "updated_description": "I have a Google Drive folder called 'Guidelines'. Check it every minute, and whenever a new file is added, send an email to finance@acmecorp.com with the subject 'guideline added' and this message in the body: 'Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.' Include a link to the new file only in the message body. The file name is not important to the email.",
+      "parameter_set": {
+        "param_name": "subject",
+        "value": "guideline added"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the email body be: \u201cDear finance department, a new file was added to the guideline folder. Please check whether this is correct. Link to the file: [webViewLink]\u201d \u2014 or would you like to change it? (The bracketed parts \u2014 like [Expense name] \u2014 will be automatically replaced with the real values when the automation runs.)",
+      "answer": "yes keep it",
+      "updated_description": "I have a Google Drive folder called 'Guidelines'. Check it every minute, and whenever a new file is added, send an email to finance@acmecorp.com with the subject 'guideline added' and this message in the body: 'Dear finance department, a new file was added to the guideline folder. Please check whether this is correct. Link to the file: [webViewLink]'. Include a link to the new file only in the message body. The file name is not important to the email.",
+      "parameter_set": {
+        "param_name": "message",
+        "value": "Dear finance department, a new file was added to the guideline folder. Please check whether this is correct. Link to the file: {{file_object.webViewLink}}"
+      }
+    }
+  ]
+}

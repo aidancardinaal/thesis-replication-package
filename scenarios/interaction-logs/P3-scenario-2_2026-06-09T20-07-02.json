@@ -1,0 +1,88 @@
+{
+  "scenario": "2",
+  "timestamp": "2026-06-09T20-07-02",
+  "initial_description": "When i receive emails in my gmail from ceo@acmecorp.com i want the following things to happen. \nIt needs to be stored to my notion database ' email tracker'  in a database called mail\n\nafter this send an email to my colleague erik@fiber.nl with the subject ' please respond to customer' with the message 'the CEO of Acme corp has reached out from their email adress, i would like you to respond to them. include the senders email",
+  "interactions": [
+    {
+      "stage": "clarifying",
+      "question": "Should the email sent to Erik include the sender\u2019s email address in the subject, in the message body, or both?",
+      "answer": "In the message body",
+      "updated_description": "When I receive emails in my Gmail from ceo@acmecorp.com, I want the following things to happen: store the email in my Notion database 'email tracker' in a database called mail, and then send an email to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'"
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email to Erik be sent every time you get an email from ceo@acmecorp.com, or only when the email is about a customer?",
+      "answer": "every time",
+      "updated_description": "When I receive emails in my Gmail from ceo@acmecorp.com, I want the following things to happen every time: store the email in my Notion database 'email tracker' in a database called mail, and then send an email to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'"
+    },
+    {
+      "stage": "clarifying",
+      "question": "What should the email to Erik use as the sender: your Gmail address, or something else?",
+      "answer": "from mine",
+      "updated_description": "When I receive emails in my Gmail from ceo@acmecorp.com, I want the following things to happen every time: store the email in my Notion database 'email tracker' in a database called mail, and then send an email from my Gmail address to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'"
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "How often would you like Gmail to check for new emails from ceo@acmecorp.com \u2014 every minute, or less often?",
+      "answer": "every 15 minutes",
+      "updated_description": "Every 15 minutes, check Gmail for new emails from ceo@acmecorp.com. When one arrives, store the email in my Notion database 'email tracker' in a database called mail, and then send an email from my Gmail address to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'",
+      "parameter_set": {
+        "param_name": "pollTimes",
+        "value": "custom"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I use the email\u2019s subject line as the title for the new Notion entry, or would you like something different?",
+      "answer": "both",
+      "updated_description": "Every 15 minutes, check Gmail for new emails from ceo@acmecorp.com. When one arrives, store the email in my Notion database 'email tracker' in a database called mail, using both the email\u2019s subject line and the sender\u2019s email address for the new Notion entry title. Then send an email from my Gmail address to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'",
+      "parameter_set": {
+        "param_name": "title",
+        "value": "{{email_object.subject}}"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "What details should I save in the new Notion entry, and which database fields should each detail go into?",
+      "answer": "the email adress in the ' sender' field and the email body into the ' email body' field. also dont put the senders email adress in the entry title anymore",
+      "updated_description": "Every 15 minutes, check Gmail for new emails from ceo@acmecorp.com. When one arrives, store the email in my Notion database 'email tracker' in a database called mail, using the email\u2019s subject line for the new Notion entry title. Save the sender\u2019s email address in the 'sender' field and the email body in the 'email body' field. Then send an email from my Gmail address to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'",
+      "parameter_set": {
+        "param_name": "propertiesUi",
+        "value": {
+          "Sender": "{{email_object.from}}",
+          "Email body": "{{email_object.body}}"
+        }
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I send it to erik@fiber.nl, or would you like to change the recipient?",
+      "answer": "yes send it to him",
+      "updated_description": "Every 15 minutes, check Gmail for new emails from ceo@acmecorp.com. When one arrives, store the email in my Notion database 'email tracker' in a database called mail, using the email\u2019s subject line for the new Notion entry title. Save the sender\u2019s email address in the 'sender' field and the email body in the 'email body' field. Then send an email from my Gmail address to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'",
+      "parameter_set": {
+        "param_name": "sendTo",
+        "value": "erik@fiber.nl"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the subject line be \u201cplease respond to customer\u201d, or would you like to change it?",
+      "answer": "thats it\n",
+      "updated_description": "Every 15 minutes, check Gmail for new emails from ceo@acmecorp.com. When one arrives, store the email in my Notion database 'email tracker' in a database called mail, using the email\u2019s subject line for the new Notion entry title. Save the sender\u2019s email address in the 'sender' field and the email body in the 'email body' field. Then send an email from my Gmail address to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'",
+      "parameter_set": {
+        "param_name": "subject",
+        "value": "please respond to customer"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the email message be: \u201cthe CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.\u201d?",
+      "answer": "yes",
+      "updated_description": "Every 15 minutes, check Gmail for new emails from ceo@acmecorp.com. When one arrives, store the email in my Notion database 'email tracker' in a database called mail, using the email\u2019s subject line for the new Notion entry title. Save the sender\u2019s email address in the 'sender' field and the email body in the 'email body' field. Then send an email from my Gmail address to my colleague erik@fiber.nl with the subject 'please respond to customer' and the message 'the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body.'",
+      "parameter_set": {
+        "param_name": "message",
+        "value": "the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender\u2019s email address in the message body."
+      }
+    }
+  ]
+}

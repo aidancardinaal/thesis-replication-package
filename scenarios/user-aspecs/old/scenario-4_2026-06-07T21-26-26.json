@@ -1,0 +1,89 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Notify finance when a new guideline file is added",
+    "description": "I have a Google Drive folder called guidelines. Check the folder every five minutes for new files. Whenever a new file is added to it, send an email right away from Gmail to finance@acmecorp.com with the subject guideline added and this email body:\n\nDear finance department,\n\nA new file was added to the guideline folder. Please check whether this is correct.\n\nFile name: [name]\nFile link: [webViewLink]\n\nThe message should include the file's name and the link to the file, not the folder name.",
+    "created_at": "2026-06-07T19:26:26.081430Z",
+    "tags": []
+  },
+  "credentials": {
+    "googleDriveOAuth2Api": {
+      "auth_type": "googleDriveOAuth2Api",
+      "service": "google_drive",
+      "credential_id": "mock-cred-google-drive",
+      "status": "ok"
+    },
+    "gmailOAuth2": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "google_drive_folder": {
+      "service": "google_drive",
+      "type": "folder",
+      "id": "mock-folder-guidelines",
+      "name": "Guidelines",
+      "details": {}
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "file_storage.trigger.google_drive",
+    "adapter_name": "Google Drive Trigger",
+    "service": "google_drive",
+    "is_trigger": true,
+    "configured_parameters": {
+      "folderToWatch": "mock-folder-guidelines",
+      "triggerOn": "specificFolder",
+      "event": "fileCreated",
+      "pollTimes": "every5Minutes"
+    },
+    "parameter_origin": {
+      "folderToWatch": "system",
+      "triggerOn": "inferred",
+      "event": "inferred",
+      "pollTimes": "user"
+    },
+    "credential_ref": "googleDriveOAuth2Api",
+    "trigger_mode": "polling",
+    "outputs": [
+      "file_object"
+    ]
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "is_trigger": false,
+      "configured_parameters": {
+        "emailType": "text",
+        "sendTo": "finance@acmecorp.com",
+        "subject": "guideline added",
+        "message": "Dear finance department,\n\nA new file was added to the guideline folder. Please check whether this is correct.\n\nFile name: {{file_object.name}}\nFile link: {{file_object.webViewLink}}"
+      },
+      "parameter_origin": {
+        "emailType": "inferred",
+        "sendTo": "user",
+        "subject": "user",
+        "message": "user"
+      },
+      "credential_ref": "gmailOAuth2",
+      "outputs": [
+        "send_result"
+      ],
+      "input_from": "trigger_1"
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    }
+  ]
+}

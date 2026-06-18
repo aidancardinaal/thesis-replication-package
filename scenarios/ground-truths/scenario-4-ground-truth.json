@@ -1,0 +1,86 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Guideline Upload Notifier",
+    "description": "When a new file is created in the Guidelines Google Drive folder, send a notification email to the finance department with the file name and a link to review it.",
+    "created_at": "2026-05-23T00:00:00Z",
+    "tags": ["google-drive", "email", "guidelines"]
+  },
+  "credentials": {
+    "google_drive_cred": {
+      "auth_type": "googleDriveOAuth2Api",
+      "service": "google_drive",
+      "credential_id": "mock-cred-google-drive",
+      "status": "ok"
+    },
+    "gmail_cred": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "guidelines_folder": {
+      "service": "google_drive",
+      "type": "folder",
+      "id": "mock-folder-guidelines",
+      "name": "Guidelines"
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "file_storage.trigger.google_drive",
+    "adapter_name": "Google Drive Trigger",
+    "service": "google_drive",
+    "description": "Fires every minute when a new file is created in the Guidelines folder.",
+    "is_trigger": true,
+    "trigger_mode": "polling",
+    "outputs": ["file_object"],
+    "credential_ref": "google_drive_cred",
+    "configured_parameters": {
+      "pollTimes": "everyMinute",
+      "triggerOn": "specificFolder",
+      "folderToWatch": "mock-folder-guidelines",
+      "event": "fileCreated"
+    },
+    "parameter_origin": {
+      "pollTimes": "default",
+      "triggerOn": "default",
+      "folderToWatch": "system",
+      "event": "default"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "email.send.gmail",
+      "adapter_name": "Send Email via Gmail",
+      "service": "gmail",
+      "description": "Sends a notification email to the finance department with the new file name and a link to review it.",
+      "is_trigger": false,
+      "input_from": "trigger_1",
+      "outputs": ["send_result"],
+      "credential_ref": "gmail_cred",
+      "configured_parameters": {
+        "sendTo": "finance@acmecorp.com",
+        "subject": "Guideline added",
+        "emailType": "text",
+        "message": "Dear finance department, \n\nSomething with the following name: {{file_object.name}} was added to the guideline folder. Please check whether this is correct. See the following link: {{file_object.webViewLink}}\n\n"
+      },
+      "parameter_origin": {
+        "sendTo": "user",
+        "subject": "user",
+        "emailType": "default",
+        "message": "user"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    }
+  ]
+}

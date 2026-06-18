@@ -1,0 +1,92 @@
+{
+  "scenario": "3",
+  "timestamp": "2026-06-11T11-25-39",
+  "initial_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Whenever a new expense row is added, you need to write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying:\n\"An expense has been added to the expenses sheet. The name is the expense name, the amount is the expense amount, and the date is the expense date.\" (the message should include the actual name, amount, and date from the new row that was added to the google sheet).\n\n\nAfter sending, the email should be labelled in Gmail. the label is called Expenses \u2014 its label ID is Label_expenses.",
+  "interactions": [
+    {
+      "stage": "clarifying",
+      "question": "Should the email be sent for every new row added, or only when the new expense amount is above a certain value?",
+      "answer": "when new expense row is added",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is the expense name, the amount is the expense amount, and the date is the expense date.\" The message should include the actual name, amount, and date from the new row that was added to the Google Sheet. After sending, label the email in Gmail with the label Expenses, which has the label ID Label_expenses."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email be sent for every new row added, or only when all three columns (Expense name, Expense amount, and Expense date) are filled in?",
+      "answer": "when every new row is added",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Whenever every new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is the expense name, the amount is the expense amount, and the date is the expense date.\" The message should include the actual name, amount, and date from the new row that was added to the Google Sheet. After sending, label the email in Gmail with the label Expenses, which has the label ID Label_expenses."
+    },
+    {
+      "stage": "clarifying",
+      "question": "Should the email be sent for every new row added, or only when all three columns (Expense name, Expense amount, and Expense date) are filled in?",
+      "answer": "just with a new row added",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is the expense name, the amount is the expense amount, and the date is the expense date.\" The message should include the actual name, amount, and date from the new row that was added to the Google Sheet. After sending, label the email in Gmail with the label Expenses, which has the label ID Label_expenses."
+    },
+    {
+      "stage": "configuring_resources",
+      "question": "Which spreadsheet for google_sheets? (options: ['Messages', 'Expenses'])",
+      "answer": "Expenses"
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "How often would you like me to check the Expenses sheet for new rows? The default is every minute.",
+      "answer": "every minute",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Check the Expenses sheet every minute for new expense rows. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is the expense name, the amount is the expense amount, and the date is the expense date.\" The message should include the actual name, amount, and date from the new row that was added to the Google Sheet. After sending, label the email in Gmail with the label Expenses, which has the label ID Label_expenses.",
+      "parameter_set": {
+        "param_name": "pollTimes",
+        "value": "everyMinute"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I send it to expenses@acmecorp.com, or would you like to change that?",
+      "answer": "yes keep it\n",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Check the Expenses sheet every minute for new expense rows. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is the expense name, the amount is the expense amount, and the date is the expense date.\" The message should include the actual name, amount, and date from the new row that was added to the Google Sheet. After sending, label the email in Gmail with the label Expenses, which has the label ID Label_expenses.",
+      "parameter_set": {
+        "param_name": "sendTo",
+        "value": "expenses@acmecorp.com"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the email subject be \u201cExpense added\u201d, or would you like to change it?",
+      "answer": "keep it",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Check the Expenses sheet every minute for new expense rows. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is the expense name, the amount is the expense amount, and the date is the expense date.\" The message should include the actual name, amount, and date from the new row that was added to the Google Sheet. After sending, label the email in Gmail with the label Expenses, which has the label ID Label_expenses.",
+      "parameter_set": {
+        "param_name": "subject",
+        "value": "Expense added"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should the email message be: \u201cAn expense has been added to the expenses sheet. The name is [Expense name], the amount is [Expense amount], and the date is [Expense date].\u201d ? (The bracketed parts \u2014 like [Expense name] \u2014 will be automatically replaced with the real values when the automation runs.)",
+      "answer": "yes",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Check the Expenses sheet every minute for new expense rows. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is [Expense name], the amount is [Expense amount], and the date is [Expense date].\" The bracketed parts should be automatically replaced with the real values from the new row that was added to the Google Sheet. After sending, label the email in Gmail with the label Expenses, which has the label ID Label_expenses.",
+      "parameter_set": {
+        "param_name": "message",
+        "value": "An expense has been added to the expenses sheet. The name is {{row_object.row[\"Expense name\"]}}, the amount is {{row_object.row[\"Expense amount\"]}}, and the date is {{row_object.row[\"Expense date\"]}}."
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I use the ID of the email that was just sent to add the Expenses label, or would you like me to use a different email instead?",
+      "answer": "no use that",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Check the Expenses sheet every minute for new expense rows. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is [Expense name], the amount is [Expense amount], and the date is [Expense date].\" The bracketed parts should be automatically replaced with the real values from the new row that was added to the Google Sheet. After sending, label the email that was just sent in Gmail with the label Expenses, which has the label ID Label_expenses.",
+      "parameter_set": {
+        "param_name": "messageId",
+        "value": "{{send_result.messageId}}"
+      }
+    },
+    {
+      "stage": "configuring_parameters",
+      "question": "Should I apply the Gmail label ID ['Label_expenses'] to the sent email, or would you like to change it? (The bracketed parts \u2014 like [Expense name] \u2014 will be automatically replaced with the real values when the automation runs.)",
+      "answer": "yes apply it",
+      "updated_description": "I manage expenses in a Google Sheet called Expenses. It has three columns: Expense name, Expense amount, and Expense date. Check the Expenses sheet every minute for new expense rows. Whenever a new expense row is added, write an email from Gmail to expenses@acmecorp.com with the subject \"Expense added\" and a message saying: \"An expense has been added to the expenses sheet. The name is [Expense name], the amount is [Expense amount], and the date is [Expense date].\" The bracketed parts should be automatically replaced with the real values from the new row that was added to the Google Sheet. After sending, label the email that was just sent in Gmail with the label Expenses, which has the label ID Label_expenses.",
+      "parameter_set": {
+        "param_name": "labelIds",
+        "value": [
+          "[\"Label_expenses\"]"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "aspec_version": "1.0",
+  "metadata": {
+    "name": "Log incoming emails to spreadsheet",
+    "description": "When a new email is received in Gmail, append the email body to the Messages spreadsheet.",
+    "created_at": "2026-05-16T00:00:00Z",
+    "tags": ["email", "spreadsheet", "logging"]
+  },
+  "credentials": {
+    "gmail_cred": {
+      "auth_type": "gmailOAuth2",
+      "service": "gmail",
+      "credential_id": "mock-cred-gmail",
+      "status": "ok"
+    },
+    "google_sheets_cred": {
+      "auth_type": "googleSheetsOAuth2Api",
+      "service": "google_sheets",
+      "credential_id": "mock-cred-google-sheets",
+      "status": "ok"
+    }
+  },
+  "resources": {
+    "messages_sheet": {
+      "service": "google_sheets",
+      "type": "spreadsheet",
+      "id": "mock-sheet-messages",
+      "name": "Messages",
+      "details": {
+        "sheets": [
+          {
+            "title": "Sheet1",
+            "index": 0,
+            "columns": ["message"]
+          }
+        ]
+      }
+    }
+  },
+  "trigger": {
+    "step_id": "trigger_1",
+    "adapter_id": "email.trigger.gmail",
+    "adapter_name": "Gmail Trigger",
+    "service": "gmail",
+    "description": "Fires when a new email arrives in the Gmail inbox.",
+    "is_trigger": true,
+    "trigger_mode": "polling",
+    "outputs": ["email_object"],
+    "credential_ref": "gmail_cred",
+    "configured_parameters": {
+      "pollTimes": "everyMinute",
+      "filters": {},
+      "folder": "inbox"
+    },
+    "parameter_origin": {
+      "pollTimes": "default",
+      "filters": "default",
+      "folder": "default"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "step_1",
+      "adapter_id": "spreadsheet.append.google_sheets",
+      "adapter_name": "Google Sheets Append",
+      "service": "google_sheets",
+      "description": "Appends the email body to the Messages spreadsheet.",
+      "is_trigger": false,
+      "input_from": "trigger_1",
+      "outputs": ["append_result"],
+      "credential_ref": "google_sheets_cred",
+      "configured_parameters": {
+        "operation": "append",
+        "documentId": "mock-sheet-messages",
+        "sheetName": "Sheet1",
+        "columns": {
+          "message": "{{email_object.body}}"
+        },
+        "convertFieldsToString": false
+      },
+      "parameter_origin": {
+        "operation": "default",
+        "documentId": "system",
+        "sheetName": "inferred",
+        "columns": "user",
+        "convertFieldsToString": "default"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger_1",
+      "to": "step_1",
+      "type": "main"
+    }
+  ]
+}

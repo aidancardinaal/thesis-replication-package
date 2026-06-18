@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ajora.dev/aspec.schema.json",
+  "title": "Ajora ASPEC - Automation Specification",
+  "description": "Platform-neutral automation specification built on top of the Ajora action catalogue.",
+  "version": "1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["aspec_version", "metadata", "trigger", "steps"],
+  "properties": {
+    "aspec_version": {
+      "type": "string",
+      "description": "Semantic version of the ASPEC spec used for this automation.",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "credentials": {
+      "type": "object",
+      "description": "Authentication credentials configured for this automation.",
+      "additionalProperties": {
+        "$ref": "#/$defs/credential"
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "External resources selected by the user (accounts, spreadsheets, folders, etc.).",
+      "additionalProperties": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "trigger": {
+      "description": "The single trigger step that starts the automation.",
+      "$ref": "#/$defs/step"
+    },
+    "steps": {
+      "type": "array",
+      "description": "Ordered list of non-trigger steps in the automation.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "connections": {
+      "type": "array",
+      "description": "Logical connections between steps (data/control flow).",
+      "items": {
+        "$ref": "#/$defs/connection"
+      }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "description": "High-level metadata about this automation specification.",
+      "additionalProperties": false,
+      "required": ["name", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the automation.",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description of what this automation does."
+        },
+        "created_by": {
+          "type": "string",
+          "description": "Identifier of the creator (user id, email, etc.)."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp in ISO 8601 format."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp in ISO 8601 format."
+        },
+        "tags": {
+          "type": "array",
+          "description": "Optional tags for grouping or searching automations.",
+          "items": {
+            "type": "string",
+            "maxLength": 50
+          }
+        }
+      }
+    },
+    "credential": {
+      "type": "object",
+      "description": "Authentication credential for a service.",
+      "additionalProperties": false,
+      "required": ["auth_type", "service", "status"],
+      "properties": {
+        "auth_type": {
+          "type": "string",
+          "description": "Type of authentication (e.g., oauth2_gmail, oauth2_google_sheets)."
+        },
+        "service": {
+          "type": "string",
+          "description": "Service identifier (e.g., gmail, google_sheets)."
+        },
+        "credential_id": {
+          "type": "string",
+          "description": "Reference to the credential in the user's vault."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the credential (ok, missing, invalid).",
+          "enum": ["ok", "missing", "invalid"]
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "description": "A selected external resource (e.g., Gmail account, specific spreadsheet, folder).",
+      "additionalProperties": true,
+      "required": ["service"],
+      "properties": {
+        "service": {
+          "type": "string",
+          "description": "Service identifier (e.g., gmail, google_sheets, outlook)."
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type within the service (e.g., account, spreadsheet, folder)."
+        },
+        "id": {
+          "type": "string",
+          "description": "Service-specific ID of this resource (e.g., spreadsheetId)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the resource."
+        },
+        "details": {
+          "type": "object",
+          "description": "Any additional service-specific metadata.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "description": "A single step in the automation, referring to a toolbox adapter. Assumed to be fully configured.",
+      "additionalProperties": false,
+      "required": ["step_id", "adapter_id", "configured_parameters"],
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "description": "Unique identifier of this step within the automation.",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 100
+        },
+        "adapter_id": {
+          "type": "string",
+          "description": "ID of the adapter from the toolbox (e.g., email.trigger.gmail).",
+          "maxLength": 200
+        },
+        "adapter_name": {
+          "type": "string",
+          "description": "Optional human-readable name of the adapter (redundant with toolbox)."
+        },
+        "service": {
+          "type": "string",
+          "description": "Service used by this adapter (e.g., gmail, google_sheets)."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of the role of this step in this specific automation."
+        },
+        "is_trigger": {
+          "type": "boolean",
+          "description": "Indicates whether this step is the automation's trigger.",
+          "default": false
+        },
+        "trigger_mode": {
+          "type": "string",
+          "description": "Optional trigger mode when is_trigger = true (e.g., polling, webhook, event).",
+          "enum": ["polling", "webhook", "event"],
+          "nullable": true
+        },
+        "input_from": {
+          "description": "Reference to the step (and optional alias) providing the input for this step.",
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Single reference, e.g. 'trigger_1.email'."
+            },
+            {
+              "type": "array",
+              "description": "Multiple input references for future use.",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "outputs": {
+          "type": "array",
+          "description": "Logical output types this step produces (e.g., email_object, append_result).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "credential_ref": {
+          "type": "string",
+          "description": "Reference to the credential key in the credentials object that this step should use."
+        },
+        "configured_parameters": {
+          "$ref": "#/$defs/configuredParameters"
+        },
+        "parameter_origin": {
+          "type": "object",
+          "description": "Indicates where each parameter value came from (user, default, inferred, system).",
+          "additionalProperties": {
+            "$ref": "#/$defs/parameterOrigin"
+          }
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Optional free-form annotations or hints for UI, debugging, etc.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "configuredParameters": {
+      "type": "object",
+      "description": "Parameter values configured for a specific step.",
+      "additionalProperties": {
+        "description": "Any JSON-serializable value, including null.",
+        "type": ["string", "number", "boolean", "object", "array", "null"]
+      }
+    },
+    "parameterOrigin": {
+      "type": "string",
+      "description": "Origin of a parameter value.",
+      "enum": ["user", "default", "inferred", "system"]
+    },
+    "connection": {
+      "type": "object",
+      "description": "Represents a logical connection between two steps.",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Source step_id."
+        },
+        "to": {
+          "type": "string",
+          "description": "Target step_id."
+        },
+        "type": {
+          "type": "string",
+          "description": "Optional connection type (e.g. main, error, branch).",
+          "default": "main"
+        }
+      }
+    }
+  }
+}

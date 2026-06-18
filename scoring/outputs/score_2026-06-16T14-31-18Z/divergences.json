@@ -1,0 +1,1462 @@
+[
+  {
+    "unit_id": "base-S1-s01",
+    "scenario": 1,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "spreadsheet.append.google_sheets",
+          "adapter_candidate": "spreadsheet.append.google_sheets",
+          "param_diffs": [
+            {
+              "param": "columns",
+              "status": "differ",
+              "gt": {
+                "message": "{{email_object.body}}"
+              },
+              "candidate": {
+                "message": "{{$json.body}}"
+              }
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-messages"
+        ],
+        "candidate_ids": [
+          "mock-sheet-messages"
+        ],
+        "gt_names": [
+          "Messages"
+        ],
+        "candidate_names": [
+          "Messages"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S1-s02",
+    "scenario": 1,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "spreadsheet.append.google_sheets",
+          "adapter_candidate": "spreadsheet.append.google_sheets",
+          "param_diffs": [
+            {
+              "param": "columns",
+              "status": "differ",
+              "gt": {
+                "message": "{{email_object.body}}"
+              },
+              "candidate": {
+                "message": "{{$json.body}}"
+              }
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-messages"
+        ],
+        "candidate_ids": [
+          "mock-sheet-messages"
+        ],
+        "gt_names": [
+          "Messages"
+        ],
+        "candidate_names": [
+          "Messages"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S1-s03",
+    "scenario": 1,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "spreadsheet.append.google_sheets",
+          "adapter_candidate": "spreadsheet.append.google_sheets",
+          "param_diffs": [
+            {
+              "param": "columns",
+              "status": "differ",
+              "gt": {
+                "message": "{{email_object.body}}"
+              },
+              "candidate": {
+                "message": "{{$json.body}}"
+              }
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-messages"
+        ],
+        "candidate_ids": [
+          "mock-sheet-messages"
+        ],
+        "gt_names": [
+          "Messages"
+        ],
+        "candidate_names": [
+          "Messages"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P1-S1",
+    "scenario": 1,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "filters",
+            "status": "differ",
+            "gt": {},
+            "candidate": {
+              "subject": "dorpshuis"
+            }
+          },
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyMinute",
+            "candidate": "everyHour"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "spreadsheet.append.google_sheets",
+          "adapter_candidate": "spreadsheet.append.google_sheets",
+          "param_diffs": [
+            {
+              "param": "columns",
+              "status": "differ",
+              "gt": {
+                "message": "{{email_object.body}}"
+              },
+              "candidate": {
+                "message": "{{email_object.subject}}\n\n{{email_object.body}}"
+              }
+            },
+            {
+              "param": "sheetName",
+              "status": "differ",
+              "gt": "Sheet1",
+              "candidate": "Sheet 1"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-messages"
+        ],
+        "candidate_ids": [
+          "mock-sheet-messages"
+        ],
+        "gt_names": [
+          "Messages"
+        ],
+        "candidate_names": [
+          "Messages"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P3-S1",
+    "scenario": 1,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyMinute",
+            "candidate": "custom"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "spreadsheet.append.google_sheets",
+          "adapter_candidate": "spreadsheet.append.google_sheets",
+          "param_diffs": [
+            {
+              "param": "sheetName",
+              "status": "differ",
+              "gt": "Sheet1",
+              "candidate": "sheet1"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-messages"
+        ],
+        "candidate_ids": [
+          "mock-sheet-messages"
+        ],
+        "gt_names": [
+          "Messages"
+        ],
+        "candidate_names": [
+          "Messages"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S2-s01",
+    "scenario": 2,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "everyMinute"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "database.create_record.notion",
+          "adapter_candidate": "database.create_record.notion",
+          "param_diffs": [
+            {
+              "param": "propertiesUi",
+              "status": "differ",
+              "gt": {
+                "Sender": "{{email_object.from}}",
+                "Email Body": "{{email_object.body}}"
+              },
+              "candidate": {
+                "Sender": "{{$json.from}}",
+                "Email Body": "{{$json.body}}"
+              }
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!",
+              "candidate": "The CEO of Acme Corp has reached out from their email address {{$json.from}}. I would like you to respond to them."
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Respond to Customer",
+              "candidate": "Please respond to Customer"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "candidate_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "gt_names": [
+          "Email Tracker"
+        ],
+        "candidate_names": [
+          "Email Tracker"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S2-s02",
+    "scenario": 2,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "everyMinute"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "database.create_record.notion",
+          "adapter_candidate": "database.create_record.notion",
+          "param_diffs": [
+            {
+              "param": "propertiesUi",
+              "status": "differ",
+              "gt": {
+                "Sender": "{{email_object.from}}",
+                "Email Body": "{{email_object.body}}"
+              },
+              "candidate": {
+                "Sender": "{{$json.from}}",
+                "Email Body": "{{$json.body}}"
+              }
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!",
+              "candidate": "The CEO of Acme Corp has reached out from their email address ({{$json.from}}). I would like you to respond to them."
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Respond to Customer",
+              "candidate": "Please respond to Customer"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "candidate_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "gt_names": [
+          "Email Tracker"
+        ],
+        "candidate_names": [
+          "Email Tracker"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S2-s03",
+    "scenario": 2,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "everyMinute"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "database.create_record.notion",
+          "adapter_candidate": "database.create_record.notion",
+          "param_diffs": [
+            {
+              "param": "propertiesUi",
+              "status": "differ",
+              "gt": {
+                "Sender": "{{email_object.from}}",
+                "Email Body": "{{email_object.body}}"
+              },
+              "candidate": {
+                "Sender": "{{$json.from}}",
+                "Email Body": "{{$json.body}}"
+              }
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!",
+              "candidate": "The CEO of Acme Corp has reached out from their email address ({{$json.from}}). I would like you to respond to them."
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Respond to Customer",
+              "candidate": "Please respond to Customer"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "candidate_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "gt_names": [
+          "Email Tracker"
+        ],
+        "candidate_names": [
+          "Email Tracker"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P1-S2",
+    "scenario": 2,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "database.create_record.notion",
+          "adapter_candidate": "database.create_record.notion",
+          "param_diffs": [
+            {
+              "param": "title",
+              "status": "differ",
+              "gt": "Mail",
+              "candidate": "{{email_object.subject}}"
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!",
+              "candidate": "The CEO of Acme Corp has reached out from {{email_object.from}}. I would like you to respond to them."
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Respond to Customer",
+              "candidate": "please respond to customer"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "candidate_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "gt_names": [
+          "Email Tracker"
+        ],
+        "candidate_names": [
+          "Email Tracker"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P3-S2",
+    "scenario": 2,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "email.trigger.gmail",
+        "adapter_candidate": "email.trigger.gmail",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "custom"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "database.create_record.notion",
+          "adapter_candidate": "database.create_record.notion",
+          "param_diffs": [
+            {
+              "param": "propertiesUi",
+              "status": "differ",
+              "gt": {
+                "Sender": "{{email_object.from}}",
+                "Email Body": "{{email_object.body}}"
+              },
+              "candidate": {
+                "Sender": "{{email_object.from}}",
+                "Email body": "{{email_object.body}}"
+              }
+            },
+            {
+              "param": "title",
+              "status": "differ",
+              "gt": "Mail",
+              "candidate": "{{email_object.subject}}"
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "The CEO of Acme Corp {{record_object.properties.Sender}} has reached out. Respond to them!",
+              "candidate": "the CEO of Acme corp has reached out from their email address, I would like you to respond to them. Include the sender’s email address in the message body."
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Respond to Customer",
+              "candidate": "please respond to customer"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "notionApi"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "candidate_ids": [
+          "mock-notion-db-email-tracker"
+        ],
+        "gt_names": [
+          "Email Tracker"
+        ],
+        "candidate_names": [
+          "Email Tracker"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S3-s01",
+    "scenario": 3,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "spreadsheet.trigger.google_sheets",
+        "adapter_candidate": "spreadsheet.trigger.google_sheets",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "everyMinute"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "An expense has been added to the expenses sheet. The name is {{row_object.row['Expense name']}} and the amount is {{row_object.row['Expense amount']}} and the date is {{row_object.row['Expense date']}}",
+              "candidate": "An expense has been added to the expenses sheet. The name is {{$json.row[\"Expense name\"]}}, the amount is {{$json.row[\"Expense amount\"]}}, and the date is {{$json.row[\"Expense date\"]}}."
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.label.gmail",
+          "adapter_candidate": "email.label.gmail",
+          "param_diffs": [
+            {
+              "param": "messageId",
+              "status": "differ",
+              "gt": "{{send_result.messageId}}",
+              "candidate": "{{$json.messageId}}"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-expenses"
+        ],
+        "candidate_ids": [
+          "mock-sheet-expenses"
+        ],
+        "gt_names": [
+          "Expenses"
+        ],
+        "candidate_names": [
+          "Expenses"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S3-s02",
+    "scenario": 3,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "spreadsheet.trigger.google_sheets",
+        "adapter_candidate": "spreadsheet.trigger.google_sheets",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "everyMinute"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "An expense has been added to the expenses sheet. The name is {{row_object.row['Expense name']}} and the amount is {{row_object.row['Expense amount']}} and the date is {{row_object.row['Expense date']}}",
+              "candidate": "An expense has been added to the expenses sheet. The name is {{$json.row[\"Expense name\"]}}, the amount is {{$json.row[\"Expense amount\"]}}, and the date is {{$json.row[\"Expense date\"]}}."
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.label.gmail",
+          "adapter_candidate": "email.label.gmail",
+          "param_diffs": [
+            {
+              "param": "messageId",
+              "status": "differ",
+              "gt": "{{send_result.messageId}}",
+              "candidate": "{{$json.messageId}}"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-expenses"
+        ],
+        "candidate_ids": [
+          "mock-sheet-expenses"
+        ],
+        "gt_names": [
+          "Expenses"
+        ],
+        "candidate_names": [
+          "Expenses"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S3-s03",
+    "scenario": 3,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "spreadsheet.trigger.google_sheets",
+        "adapter_candidate": "spreadsheet.trigger.google_sheets",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "everyMinute"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "An expense has been added to the expenses sheet. The name is {{row_object.row['Expense name']}} and the amount is {{row_object.row['Expense amount']}} and the date is {{row_object.row['Expense date']}}",
+              "candidate": "An expense has been added to the expenses sheet. The name is {{$json.row[\"Expense name\"]}}, the amount is {{$json.row[\"Expense amount\"]}}, and the date is {{$json.row[\"Expense date\"]}}."
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.label.gmail",
+          "adapter_candidate": "email.label.gmail",
+          "param_diffs": [
+            {
+              "param": "messageId",
+              "status": "differ",
+              "gt": "{{send_result.messageId}}",
+              "candidate": "{{$json.messageId}}"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-expenses"
+        ],
+        "candidate_ids": [
+          "mock-sheet-expenses"
+        ],
+        "gt_names": [
+          "Expenses"
+        ],
+        "candidate_names": [
+          "Expenses"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P2-S3",
+    "scenario": 3,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "spreadsheet.trigger.google_sheets",
+        "adapter_candidate": "spreadsheet.trigger.google_sheets",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "custom"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "An expense has been added to the expenses sheet. The name is {{row_object.row['Expense name']}} and the amount is {{row_object.row['Expense amount']}} and the date is {{row_object.row['Expense date']}}",
+              "candidate": "{{row_object.row['Expense name']}}\n{{row_object.row['Expense amount']}}\n{{row_object.row['Expense date']}}"
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Expense added",
+              "candidate": "expense added"
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.label.gmail",
+          "adapter_candidate": "email.label.gmail",
+          "param_diffs": [
+            {
+              "param": "labelIds",
+              "status": "differ",
+              "gt": [
+                "Label_expenses"
+              ],
+              "candidate": [
+                "[\"Label_expenses\"]"
+              ]
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-expenses"
+        ],
+        "candidate_ids": [
+          "mock-sheet-expenses"
+        ],
+        "gt_names": [
+          "Expenses"
+        ],
+        "candidate_names": [
+          "Expenses"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P4-S3",
+    "scenario": 3,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "spreadsheet.trigger.google_sheets",
+        "adapter_candidate": "spreadsheet.trigger.google_sheets",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyHour",
+            "candidate": "everyMinute"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "An expense has been added to the expenses sheet. The name is {{row_object.row['Expense name']}} and the amount is {{row_object.row['Expense amount']}} and the date is {{row_object.row['Expense date']}}",
+              "candidate": "An expense has been added to the expenses sheet. The name is {{row_object.row[\"Expense name\"]}}, the amount is {{row_object.row[\"Expense amount\"]}}, and the date is {{row_object.row[\"Expense date\"]}}."
+            }
+          ]
+        },
+        {
+          "adapter_gt": "email.label.gmail",
+          "adapter_candidate": "email.label.gmail",
+          "param_diffs": [
+            {
+              "param": "labelIds",
+              "status": "differ",
+              "gt": [
+                "Label_expenses"
+              ],
+              "candidate": [
+                "[\"Label_expenses\"]"
+              ]
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleSheetsTriggerOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-sheet-expenses"
+        ],
+        "candidate_ids": [
+          "mock-sheet-expenses"
+        ],
+        "gt_names": [
+          "Expenses"
+        ],
+        "candidate_names": [
+          "Expenses"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S4-s01",
+    "scenario": 4,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "file_storage.trigger.google_drive",
+        "adapter_candidate": "file_storage.trigger.google_drive",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "Dear finance department, \n\nSomething with the following name: {{file_object.name}} was added to the guideline folder. Please check whether this is correct. See the following link: {{file_object.webViewLink}}\n\n",
+              "candidate": "Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.\n\nFile name: {{$json.name}}\nFile link: {{$json.webViewLink}}"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-folder-guidelines"
+        ],
+        "candidate_ids": [
+          "mock-folder-guidelines"
+        ],
+        "gt_names": [
+          "Guidelines"
+        ],
+        "candidate_names": [
+          "Guidelines"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S4-s02",
+    "scenario": 4,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "file_storage.trigger.google_drive",
+        "adapter_candidate": "file_storage.trigger.google_drive",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "Dear finance department, \n\nSomething with the following name: {{file_object.name}} was added to the guideline folder. Please check whether this is correct. See the following link: {{file_object.webViewLink}}\n\n",
+              "candidate": "Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.\n\nFile name: {{$json.name}}\nFile link: {{$json.webViewLink}}"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-folder-guidelines"
+        ],
+        "candidate_ids": [
+          "mock-folder-guidelines"
+        ],
+        "gt_names": [
+          "Guidelines"
+        ],
+        "candidate_names": [
+          "Guidelines"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "base-S4-s03",
+    "scenario": 4,
+    "condition": "baseline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "file_storage.trigger.google_drive",
+        "adapter_candidate": "file_storage.trigger.google_drive",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "Dear finance department, \n\nSomething with the following name: {{file_object.name}} was added to the guideline folder. Please check whether this is correct. See the following link: {{file_object.webViewLink}}\n\n",
+              "candidate": "Dear finance department, a new file was added to the guideline folder. Please check whether this is correct.\n\nFile name: {{$json.name}}\nFile link: {{$json.webViewLink}}"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-folder-guidelines"
+        ],
+        "candidate_ids": [
+          "mock-folder-guidelines"
+        ],
+        "gt_names": [
+          "Guidelines"
+        ],
+        "candidate_names": [
+          "Guidelines"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P2-S4",
+    "scenario": 4,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "file_storage.trigger.google_drive",
+        "adapter_candidate": "file_storage.trigger.google_drive",
+        "adapter_match": true,
+        "param_diffs": [
+          {
+            "param": "pollTimes",
+            "status": "differ",
+            "gt": "everyMinute",
+            "candidate": "everyHour"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "Dear finance department, \n\nSomething with the following name: {{file_object.name}} was added to the guideline folder. Please check whether this is correct. See the following link: {{file_object.webViewLink}}\n\n",
+              "candidate": "Link to the file: {{file_object.webViewLink}}."
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Guideline added",
+              "candidate": "guidline added"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-folder-guidelines"
+        ],
+        "candidate_ids": [
+          "mock-folder-guidelines"
+        ],
+        "gt_names": [
+          "Guidelines"
+        ],
+        "candidate_names": [
+          "Guidelines"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  },
+  {
+    "unit_id": "P4-S4",
+    "scenario": 4,
+    "condition": "pipeline",
+    "divergences": {
+      "trigger": {
+        "adapter_gt": "file_storage.trigger.google_drive",
+        "adapter_candidate": "file_storage.trigger.google_drive",
+        "adapter_match": true,
+        "param_diffs": []
+      },
+      "steps": [
+        {
+          "adapter_gt": "email.send.gmail",
+          "adapter_candidate": "email.send.gmail",
+          "param_diffs": [
+            {
+              "param": "message",
+              "status": "differ",
+              "gt": "Dear finance department, \n\nSomething with the following name: {{file_object.name}} was added to the guideline folder. Please check whether this is correct. See the following link: {{file_object.webViewLink}}\n\n",
+              "candidate": "Dear finance department, a new file was added to the guideline folder. Please check whether this is correct. Link to the file: {{file_object.webViewLink}}"
+            },
+            {
+              "param": "subject",
+              "status": "differ",
+              "gt": "Guideline added",
+              "candidate": "guideline added"
+            }
+          ]
+        }
+      ],
+      "credentials": {
+        "gt": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "candidate": [
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      },
+      "resources": {
+        "gt_ids": [
+          "mock-folder-guidelines"
+        ],
+        "candidate_ids": [
+          "mock-folder-guidelines"
+        ],
+        "gt_names": [
+          "Guidelines"
+        ],
+        "candidate_names": [
+          "Guidelines"
+        ],
+        "match": true,
+        "missing": [],
+        "extra": []
+      }
+    }
+  }
+]

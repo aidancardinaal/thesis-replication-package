@@ -1,0 +1,106 @@
+{
+  "condition": "pipeline",
+  "scenario": 1,
+  "unit_id": "P1-S1",
+  "schema_valid": true,
+  "schema_errors": [],
+  "completeness": {
+    "trigger": "1/1",
+    "steps": "1/1",
+    "credentials": "2/2",
+    "resources": "1/1",
+    "score": 1.0
+  },
+  "exact_dimensions": {
+    "trigger_exact": false,
+    "steps_exact": false,
+    "credentials_exact": true,
+    "resources_exact": true
+  },
+  "n_param_divergences": 4,
+  "structure": {
+    "trigger_adapter": "email.trigger.gmail",
+    "step_adapters": [
+      "spreadsheet.append.google_sheets"
+    ],
+    "n_steps": 1
+  },
+  "divergences": {
+    "trigger": {
+      "adapter_gt": "email.trigger.gmail",
+      "adapter_candidate": "email.trigger.gmail",
+      "adapter_match": true,
+      "param_diffs": [
+        {
+          "param": "filters",
+          "status": "differ",
+          "gt": {},
+          "candidate": {
+            "subject": "dorpshuis"
+          }
+        },
+        {
+          "param": "pollTimes",
+          "status": "differ",
+          "gt": "everyMinute",
+          "candidate": "everyHour"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "adapter_gt": "spreadsheet.append.google_sheets",
+        "adapter_candidate": "spreadsheet.append.google_sheets",
+        "param_diffs": [
+          {
+            "param": "columns",
+            "status": "differ",
+            "gt": {
+              "message": "{{email_object.body}}"
+            },
+            "candidate": {
+              "message": "{{email_object.subject}}\n\n{{email_object.body}}"
+            }
+          },
+          {
+            "param": "sheetName",
+            "status": "differ",
+            "gt": "Sheet1",
+            "candidate": "Sheet 1"
+          }
+        ]
+      }
+    ],
+    "credentials": {
+      "gt": [
+        "gmailOAuth2",
+        "googleSheetsOAuth2Api"
+      ],
+      "candidate": [
+        "gmailOAuth2",
+        "googleSheetsOAuth2Api"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    },
+    "resources": {
+      "gt_ids": [
+        "mock-sheet-messages"
+      ],
+      "candidate_ids": [
+        "mock-sheet-messages"
+      ],
+      "gt_names": [
+        "Messages"
+      ],
+      "candidate_names": [
+        "Messages"
+      ],
+      "match": true,
+      "missing": [],
+      "extra": []
+    }
+  },
+  "source_file": "thesis-new-pipeline/scenarios/user-aspecs/P1-scenario-1_2026-06-08T10-05-22.json"
+}

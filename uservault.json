@@ -1,0 +1,82 @@
+{
+    "credentials": [
+        {
+            "auth_type": "gmailOAuth2",
+            "id": "mock-cred-gmail",
+            "name": "My Gmail Account",
+            "status": "ok"
+        },
+        {
+            "auth_type": "googleSheetsOAuth2Api",
+            "id": "mock-cred-google-sheets",
+            "name": "My Google Sheets Account",
+            "status": "ok"
+        },
+        {
+            "auth_type": "googleSheetsTriggerOAuth2Api",
+            "id": "mock-cred-google-sheets-trigger",
+            "name": "My Google Sheets Trigger Account",
+            "status": "ok"
+        },
+        {
+            "auth_type": "notionApi",
+            "id": "mock-cred-notion",
+            "name": "My Notion Account",
+            "status": "ok"
+        },
+        {
+            "auth_type": "googleDriveOAuth2Api",
+            "id": "mock-cred-google-drive",
+            "name": "My Google Drive Account",
+            "status": "ok"
+        }
+    ],
+    "resources": [
+        {
+            "fileId": "mock-sheet-messages",
+            "fileName": "Messages",
+            "resource_type": "application/vnd.google-apps.spreadsheet",
+            "details": {
+                "sheets": [
+                    {
+                        "title": "Sheet1",
+                        "index": 0,
+                        "rowCount": 1000,
+                        "columnCount": 26,
+                        "columns": ["message"]
+
+                    }
+                ]
+            }
+        },
+        {
+            "fileId": "mock-sheet-expenses",
+            "fileName": "Expenses",
+            "resource_type": "application/vnd.google-apps.spreadsheet",
+            "details": {
+                "sheets": [
+                    {
+                        "title": "Sheet1",
+                        "index": 0,
+                        "rowCount": 1000,
+                        "columnCount": 26
+                    }
+                ],
+                "columns": ["Expense name", "Expense amount", "Expense date"]
+            }
+        },
+        {
+            "fileId": "mock-notion-db-email-tracker",
+            "fileName": "Email Tracker",
+            "resource_type": "application/vnd.notion.database",
+            "details": {
+                "properties": ["Name", "Sender", "Email Body"]
+            }
+        },
+        {
+            "fileId": "mock-folder-guidelines",
+            "fileName": "Guidelines",
+            "resource_type": "application/vnd.google-apps.folder"
+        }
+    ]
+}
