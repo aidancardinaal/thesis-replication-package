@@ -1,0 +1,47 @@
+{
+  "_comment": "Binding layer (DR4/DR6). Maps the ASPEC's abstract mock identifiers to the concrete resource and credential IDs in the target n8n instance. A production deployment would populate this automatically from each platform's resource-listing API; here it is filled by hand so the translation is reproducible. Replace every <YOUR_...> placeholder below with the real IDs/names from your own n8n instance before running.",
+  "resources": {
+    "mock-sheet-messages": {
+      "id": "<YOUR_MESSAGES_SHEET_ID>",
+      "name": "Messages",
+      "url": "https://docs.google.com/spreadsheets/d/<YOUR_MESSAGES_SHEET_ID>/edit"
+    },
+    "mock-sheet-expenses": {
+      "id": "<YOUR_EXPENSES_SHEET_ID>",
+      "name": "Expenses",
+      "url": "https://docs.google.com/spreadsheets/d/<YOUR_EXPENSES_SHEET_ID>/edit"
+    },
+    "mock-notion-db-email-tracker": {
+      "id": "<YOUR_EMAIL_TRACKER_DB_ID>",
+      "name": "Email Tracker",
+      "url": "https://www.notion.so/<YOUR_EMAIL_TRACKER_DB_ID>"
+    },
+    "mock-folder-guidelines": {
+      "id": "<YOUR_GUIDELINES_FOLDER_ID>",
+      "name": "Guidelines",
+      "url": "https://drive.google.com/drive/folders/<YOUR_GUIDELINES_FOLDER_ID>"
+    }
+  },
+  "credentials": {
+    "mock-cred-gmail": {
+      "id": "<YOUR_GMAIL_CREDENTIAL_ID>",
+      "name": "Gmail account"
+    },
+    "mock-cred-google-sheets": {
+      "id": "<YOUR_GOOGLE_SHEETS_CREDENTIAL_ID>",
+      "name": "Google Sheets account"
+    },
+    "mock-cred-google-sheets-trigger": {
+      "id": "<YOUR_GOOGLE_SHEETS_TRIGGER_CREDENTIAL_ID>",
+      "name": "Google Sheets Trigger account"
+    },
+    "mock-cred-notion": {
+      "id": "<YOUR_NOTION_CREDENTIAL_ID>",
+      "name": "Notion account"
+    },
+    "mock-cred-google-drive": {
+      "id": "<YOUR_GOOGLE_DRIVE_CREDENTIAL_ID>",
+      "name": "Google Drive account"
+    }
+  }
+}

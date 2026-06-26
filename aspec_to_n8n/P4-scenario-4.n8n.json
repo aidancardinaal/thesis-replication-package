@@ -1,0 +1,83 @@
+{
+  "name": "Email finance when a new Guidelines file is added",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "<YOUR_GUIDELINES_FOLDER_ID>",
+          "mode": "list",
+          "cachedResultName": "Guidelines",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/<YOUR_GUIDELINES_FOLDER_ID>"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b83cb7e3-3360-5ddc-a32d-3c0657cf5e99",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "<YOUR_GOOGLE_DRIVE_CREDENTIAL_ID>",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "YOUR_EMAIL@gmail.com",
+        "subject": "guideline added",
+        "emailType": "text",
+        "message": "=Dear finance department, a new file was added to the guideline folder. Please check whether this is correct. Link to the file: {{ $json.webViewLink }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "c8ea7e64-bed4-5d79-9639-fce4cdfcf2fa",
+      "name": "Send Email",
+      "webhookId": "c71289f8-cda9-5adc-b6d2-9fc0c1860337",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "<YOUR_GMAIL_CREDENTIAL_ID>",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}
